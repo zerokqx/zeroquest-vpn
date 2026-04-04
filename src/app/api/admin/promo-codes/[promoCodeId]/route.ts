@@ -1,12 +1,50 @@
 import { adminPromoCodeSchema } from '@/entities/promo-code/model/schemas';
 import {
   deletePromoCode,
+  getPromoCodeById,
   updatePromoCode,
 } from '@/entities/promo-code';
 import { requireAdminUser } from '@/entities/user';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ promoCodeId: string }> }
+): Promise<Response> {
+  try {
+    await requireAdminUser();
+    const { promoCodeId } = await context.params;
+    const promoCode = await getPromoCodeById(promoCodeId);
+
+    if (!promoCode) {
+      return Response.json(
+        {
+          error: 'Промокод не найден',
+        },
+        { status: 404 }
+      );
+    }
+
+    return Response.json({
+      promoCode,
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error && error.message === 'Unauthorized'
+            ? 'Войдите как администратор'
+            : 'Доступ запрещён',
+      },
+      {
+        status:
+          error instanceof Error && error.message === 'Unauthorized' ? 401 : 403,
+      }
+    );
+  }
+}
 
 export async function PATCH(
   request: Request,

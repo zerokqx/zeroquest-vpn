@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
-import { listPlans } from '@/entities/plan';
-import { listPromoCodes } from '@/entities/promo-code';
 import { getCurrentUser } from '@/entities/user';
-import { AdminPage } from '@/widgets/admin';
+import { AdminShell } from '@/widgets/admin';
 
 export default async function AdminScreen() {
   const user = await getCurrentUser();
@@ -15,10 +13,5 @@ export default async function AdminScreen() {
     redirect('/');
   }
 
-  const [plans, promoCodes] = await Promise.all([
-    listPlans(),
-    listPromoCodes(),
-  ]);
-
-  return <AdminPage plans={plans} promoCodes={promoCodes} user={user} />;
+  return <AdminShell />;
 }

@@ -1,9 +1,46 @@
 import { adminPlanSchema, toUpsertPlanInput } from '@/entities/plan/model/schemas';
-import { deletePlan, updatePlan } from '@/entities/plan';
+import { deletePlan, getPlanById, updatePlan } from '@/entities/plan';
 import { requireAdminUser } from '@/entities/user';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ planId: string }> }
+): Promise<Response> {
+  try {
+    await requireAdminUser();
+    const { planId } = await context.params;
+    const plan = await getPlanById(planId);
+
+    if (!plan) {
+      return Response.json(
+        {
+          error: 'Тариф не найден',
+        },
+        { status: 404 }
+      );
+    }
+
+    return Response.json({
+      plan,
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        error:
+          error instanceof Error && error.message === 'Unauthorized'
+            ? 'Войдите как администратор'
+            : 'Доступ запрещён',
+      },
+      {
+        status:
+          error instanceof Error && error.message === 'Unauthorized' ? 401 : 403,
+      }
+    );
+  }
+}
 
 export async function PATCH(
   request: Request,
