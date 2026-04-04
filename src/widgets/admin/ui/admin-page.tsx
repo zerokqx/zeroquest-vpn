@@ -582,7 +582,7 @@ const PromoCodeCreate = () => (
 
 export function AdminPage() {
   return (
-    <Admin basename="/admin" dashboard={AdminDashboard} dataProvider={adminDataProvider}>
+    <Admin dashboard={AdminDashboard} dataProvider={adminDataProvider}>
       <Resource
         create={PlanCreate}
         edit={PlanEdit}
