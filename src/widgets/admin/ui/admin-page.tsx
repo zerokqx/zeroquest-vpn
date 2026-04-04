@@ -1,919 +1,602 @@
 'use client';
 
 import {
-  Badge,
-  Button,
-  Checkbox,
-  Container,
-  Group,
+  Admin,
+  BooleanField,
+  BooleanInput,
+  Create,
+  Datagrid,
+  DataProvider,
+  DateField,
+  DateTimeInput,
+  DeleteButton,
+  Edit,
+  EditButton,
+  List,
+  NumberField,
   NumberInput,
-  Paper,
-  Select,
-  SimpleGrid,
-  Stack,
-  Table,
-  Tabs,
-  Text,
+  ReferenceArrayInput,
+  Resource,
+  SelectArrayInput,
+  SelectInput,
+  SimpleForm,
+  TextArrayInput,
+  TextField,
   TextInput,
-  Textarea,
-  Title,
-} from '@mantine/core';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
-import { LogoutButton } from '@/features/auth/ui/logout-button';
+  maxValue,
+  minValue,
+  required,
+  type RaRecord,
+} from 'react-admin';
+import { Card, CardContent, Typography } from '@mui/material';
 import type { Plan } from '@/entities/plan/model/types';
 import type { PromoCode } from '@/entities/promo-code/model/types';
-import type { User } from '@/entities/user/model/types';
-import styles from './admin-page.module.css';
 
-interface AdminPageProps {
-  plans: Plan[];
-  promoCodes: PromoCode[];
-  user: User;
-}
+type AdminResourceName = 'plans' | 'promo-codes';
 
-interface PlanFormState {
-  badge: string;
-  ctaText: string;
-  description: string;
-  durationDays: number;
-  features: string;
-  highlight: string;
-  inboundId: number;
-  isActive: boolean;
-  isFeatured: boolean;
-  priceRub: number;
-  slug: string;
-  speedLimitMbps: number | null;
-  title: string;
+type PlanRecord = Plan & {
   trafficLimitGb: number | null;
-}
+};
 
-interface PromoFormState {
-  appliesToPlanIds: string[];
-  code: string;
-  description: string;
-  discountType: 'fixed' | 'percent';
-  discountValue: number;
-  expiresAt: string;
-  isActive: boolean;
-  usageLimit: number | null;
-}
+type AdminRecord = (PlanRecord | PromoCode) & RaRecord;
 
-const fieldStyles = {
-  input: {
-    background: 'var(--surface-strong)',
-    borderColor: 'var(--surface-border)',
-    color: 'var(--foreground)',
+const BYTES_IN_GIGABYTE = 1024 ** 3;
+
+const resourceConfig = {
+  plans: {
+    itemKey: 'plan',
+    listKey: 'plans',
+    path: '/api/admin/plans',
   },
-  label: {
-    color: 'var(--foreground)',
-    marginBottom: 6,
-  },
-  description: {
-    color: 'var(--muted)',
+  'promo-codes': {
+    itemKey: 'promoCode',
+    listKey: 'promoCodes',
+    path: '/api/admin/promo-codes',
   },
 } as const;
 
-const emptyPlanForm: PlanFormState = {
-  badge: '',
-  ctaText: '',
-  description: '',
-  durationDays: 30,
-  features: '',
-  highlight: '',
-  inboundId: 1,
-  isActive: true,
-  isFeatured: false,
-  priceRub: 0,
-  slug: '',
-  speedLimitMbps: null,
-  title: '',
-  trafficLimitGb: null,
+const isAdminResource = (resource: string): resource is AdminResourceName =>
+  resource in resourceConfig;
+
+const toError = (message: string, status: number, body: unknown): Error & {
+  body: unknown;
+  status: number;
+} => {
+  const error = new Error(message) as Error & {
+    body: unknown;
+    status: number;
+  };
+
+  error.body = body;
+  error.status = status;
+
+  return error;
 };
 
-const emptyPromoForm: PromoFormState = {
-  appliesToPlanIds: [],
-  code: '',
-  description: '',
-  discountType: 'percent',
-  discountValue: 10,
-  expiresAt: '',
-  isActive: true,
-  usageLimit: null,
+const requestJson = async <T,>(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<T> => {
+  const response = await fetch(input, {
+    ...init,
+    cache: 'no-store',
+    credentials: 'same-origin',
+    headers: {
+      Accept: 'application/json',
+      ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
+      ...init?.headers,
+    },
+  });
+  const payload = (await response.json().catch(() => null)) as
+    | Record<string, unknown>
+    | null;
+
+  if (!response.ok) {
+    throw toError(
+      typeof payload?.error === 'string' ? payload.error : 'Request failed',
+      response.status,
+      payload
+    );
+  }
+
+  return payload as T;
 };
 
-const planToFormState = (plan: Plan): PlanFormState => ({
-  badge: plan.badge ?? '',
-  ctaText: plan.ctaText,
-  description: plan.description,
-  durationDays: plan.durationDays,
-  features: plan.features.join('\n'),
-  highlight: plan.highlight ?? '',
-  inboundId: plan.inboundId,
-  isActive: plan.isActive,
-  isFeatured: plan.isFeatured,
-  priceRub: plan.priceRub,
-  slug: plan.slug,
-  speedLimitMbps: plan.speedLimitMbps,
-  title: plan.title,
+const toNullableNumber = (value: unknown): number | null => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value);
+
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+};
+
+const toNullableText = (value: unknown): string | null => {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalized = value.trim();
+
+  return normalized.length > 0 ? normalized : null;
+};
+
+const toPlanRecord = (plan: Plan): PlanRecord => ({
+  ...plan,
   trafficLimitGb:
     plan.trafficLimitBytes === null
       ? null
-      : Math.round(plan.trafficLimitBytes / 1024 ** 3),
+      : Math.round(plan.trafficLimitBytes / BYTES_IN_GIGABYTE),
 });
 
-const promoToFormState = (promoCode: PromoCode): PromoFormState => ({
-  appliesToPlanIds: promoCode.appliesToPlanIds,
-  code: promoCode.code,
-  description: promoCode.description,
-  discountType: promoCode.discountType,
-  discountValue: promoCode.discountValue,
-  expiresAt: promoCode.expiresAt ? promoCode.expiresAt.slice(0, 16) : '',
-  isActive: promoCode.isActive,
-  usageLimit: promoCode.usageLimit,
+const toPlanPayload = (record: Partial<PlanRecord>) => ({
+  allowsCustomTraffic: Boolean(record.allowsCustomTraffic),
+  badge: toNullableText(record.badge),
+  ctaText: String(record.ctaText ?? '').trim(),
+  customPricePerGbRub: Boolean(record.allowsCustomTraffic)
+    ? toNullableNumber(record.customPricePerGbRub)
+    : null,
+  customTrafficMaxGb: Boolean(record.allowsCustomTraffic)
+    ? toNullableNumber(record.customTrafficMaxGb)
+    : null,
+  customTrafficMinGb: Boolean(record.allowsCustomTraffic)
+    ? toNullableNumber(record.customTrafficMinGb)
+    : null,
+  description: String(record.description ?? '').trim(),
+  durationDays: toNullableNumber(record.durationDays) ?? 30,
+  features: Array.isArray(record.features)
+    ? record.features
+        .map((feature) => String(feature).trim())
+        .filter(Boolean)
+    : [],
+  highlight: toNullableText(record.highlight),
+  inboundId: toNullableNumber(record.inboundId) ?? 1,
+  isActive: Boolean(record.isActive),
+  isFeatured: Boolean(record.isFeatured),
+  priceRub: toNullableNumber(record.priceRub) ?? 0,
+  slug: String(record.slug ?? '').trim(),
+  speedLimitMbps: toNullableNumber(record.speedLimitMbps),
+  title: String(record.title ?? '').trim(),
+  trafficLimitGb: toNullableNumber(record.trafficLimitGb),
 });
 
-const parseFeatures = (value: string): string[] =>
-  value
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
+const toPromoPayload = (record: Partial<PromoCode>) => ({
+  appliesToPlanIds: Array.isArray(record.appliesToPlanIds)
+    ? record.appliesToPlanIds
+        .map((planId) => String(planId).trim())
+        .filter(Boolean)
+    : [],
+  code: String(record.code ?? '').trim().toUpperCase(),
+  description: String(record.description ?? '').trim(),
+  discountType: record.discountType === 'fixed' ? 'fixed' : 'percent',
+  discountValue: toNullableNumber(record.discountValue) ?? 0,
+  expiresAt:
+    typeof record.expiresAt === 'string' && record.expiresAt.trim() !== ''
+      ? new Date(record.expiresAt).toISOString()
+      : null,
+  isActive: Boolean(record.isActive),
+  usageLimit: toNullableNumber(record.usageLimit),
+});
 
-export function AdminPage({ plans: initialPlans, promoCodes: initialPromoCodes, user }: AdminPageProps) {
-  const router = useRouter();
-  const [plans, setPlans] = useState(initialPlans);
-  const [promoCodes, setPromoCodes] = useState(initialPromoCodes);
-  const [editingPlanId, setEditingPlanId] = useState<string | null>(null);
-  const [editingPromoCodeId, setEditingPromoCodeId] = useState<string | null>(null);
-  const [planForm, setPlanForm] = useState<PlanFormState>(emptyPlanForm);
-  const [promoForm, setPromoForm] = useState<PromoFormState>(emptyPromoForm);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+const compareValues = (
+  left: unknown,
+  right: unknown,
+  order: 'ASC' | 'DESC'
+): number => {
+  if (left === right) {
+    return 0;
+  }
 
-  const planOptions = plans.map((plan) => ({
-    label: `${plan.title} (${plan.id})`,
-    value: plan.id,
-  }));
+  if (left === null || left === undefined) {
+    return 1;
+  }
 
-  const submitPlan = () => {
-    setError(null);
-    startTransition(async () => {
-      try {
-        const payload = {
-          badge: planForm.badge.trim() || null,
-          ctaText: planForm.ctaText.trim(),
-          description: planForm.description.trim(),
-          durationDays: planForm.durationDays,
-          features: parseFeatures(planForm.features),
-          highlight: planForm.highlight.trim() || null,
-          inboundId: planForm.inboundId,
-          isActive: planForm.isActive,
-          isFeatured: planForm.isFeatured,
-          priceRub: planForm.priceRub,
-          slug: planForm.slug.trim(),
-          speedLimitMbps: planForm.speedLimitMbps,
-          title: planForm.title.trim(),
-          trafficLimitGb: planForm.trafficLimitGb,
-        };
-        const response = await fetch(
-          editingPlanId ? `/api/admin/plans/${editingPlanId}` : '/api/admin/plans',
+  if (right === null || right === undefined) {
+    return -1;
+  }
+
+  const normalizedLeft =
+    typeof left === 'string' || typeof left === 'number' || typeof left === 'boolean'
+      ? left
+      : JSON.stringify(left);
+  const normalizedRight =
+    typeof right === 'string' || typeof right === 'number' || typeof right === 'boolean'
+      ? right
+      : JSON.stringify(right);
+
+  const result =
+    normalizedLeft > normalizedRight
+      ? 1
+      : normalizedLeft < normalizedRight
+        ? -1
+        : 0;
+
+  return order === 'ASC' ? result : result * -1;
+};
+
+const getListPayload = async (resource: AdminResourceName) => {
+  const config = resourceConfig[resource];
+  const payload = await requestJson<Record<string, unknown>>(config.path);
+
+  return payload[config.listKey] as unknown[];
+};
+
+const getItemPayload = async (resource: AdminResourceName, id: string) => {
+  const config = resourceConfig[resource];
+  const payload = await requestJson<Record<string, unknown>>(
+    `${config.path}/${id}`
+  );
+
+  return payload[config.itemKey];
+};
+
+const mapRecord = (resource: AdminResourceName, payload: unknown): AdminRecord => {
+  if (resource === 'plans') {
+    return toPlanRecord(payload as Plan) as AdminRecord;
+  }
+
+  return payload as AdminRecord;
+};
+
+const adminDataProvider = {
+  getList: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const allRecords = (await getListPayload(resource)).map((record) =>
+      mapRecord(resource, record)
+    );
+    const sort = params.sort ?? { field: 'id', order: 'ASC' as const };
+    const pagination = params.pagination ?? { page: 1, perPage: allRecords.length || 25 };
+    const sortedRecords = [...allRecords].sort((left, right) =>
+      compareValues(
+        (left as Record<string, unknown>)[sort.field],
+        (right as Record<string, unknown>)[sort.field],
+        sort.order
+      )
+    );
+    const start = (pagination.page - 1) * pagination.perPage;
+    const end = start + pagination.perPage;
+
+    return {
+      data: sortedRecords.slice(start, end) as AdminRecord[],
+      total: sortedRecords.length,
+    };
+  },
+  getOne: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    return {
+      data: mapRecord(resource, await getItemPayload(resource, String(params.id))) as AdminRecord,
+    };
+  },
+  getMany: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const allRecords = (await getListPayload(resource)).map((record) =>
+      mapRecord(resource, record)
+    );
+
+    return {
+      data: allRecords.filter((record) => params.ids.includes(record.id)) as AdminRecord[],
+    };
+  },
+  getManyReference: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const allRecords = (await getListPayload(resource)).map((record) =>
+      mapRecord(resource, record)
+    );
+    const filtered = allRecords.filter((record) => {
+      const candidate = (record as Record<string, unknown>)[params.target];
+
+      if (Array.isArray(candidate)) {
+        return candidate.includes(params.id);
+      }
+
+      return candidate === params.id;
+    });
+
+    return {
+      data: filtered as AdminRecord[],
+      total: filtered.length,
+    };
+  },
+  create: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const payload =
+      resource === 'plans'
+        ? toPlanPayload(params.data as Partial<PlanRecord>)
+        : toPromoPayload(params.data as Partial<PromoCode>);
+    const response = await requestJson<Record<string, unknown>>(resourceConfig[resource].path, {
+      body: JSON.stringify(payload),
+      method: 'POST',
+    });
+
+    return {
+      data: mapRecord(resource, response[resourceConfig[resource].itemKey]) as AdminRecord,
+    };
+  },
+  update: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const payload =
+      resource === 'plans'
+        ? toPlanPayload(params.data as Partial<PlanRecord>)
+        : toPromoPayload(params.data as Partial<PromoCode>);
+    const response = await requestJson<Record<string, unknown>>(
+      `${resourceConfig[resource].path}/${params.id}`,
+      {
+        body: JSON.stringify(payload),
+        method: 'PATCH',
+      }
+    );
+
+    return {
+      data: mapRecord(resource, response[resourceConfig[resource].itemKey]) as AdminRecord,
+    };
+  },
+  updateMany: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const ids = await Promise.all(
+      params.ids.map(async (id) => {
+        await adminDataProvider.update(resource, {
+          id,
+          data: params.data,
+          previousData: params.data,
+        });
+
+        return id;
+      })
+    );
+
+    return { data: ids };
+  },
+  delete: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    await requestJson<Record<string, unknown>>(
+      `${resourceConfig[resource].path}/${params.id}`,
+      {
+        method: 'DELETE',
+      }
+    );
+
+    return {
+      data: params.previousData,
+    };
+  },
+  deleteMany: async (resource, params) => {
+    if (!isAdminResource(resource)) {
+      throw new Error(`Unsupported resource: ${resource}`);
+    }
+
+    const ids = await Promise.all(
+      params.ids.map(async (id) => {
+        await (adminDataProvider as DataProvider).delete(
+          resource,
           {
-            method: editingPlanId ? 'PATCH' : 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          }
+            id,
+            previousData: { id },
+          } as never
         );
-        const result = (await response.json()) as { error?: string; plan?: Plan };
 
-        if (!response.ok || !result.plan) {
-          throw new Error(result.error || 'Не удалось сохранить тариф');
-        }
+        return id;
+      })
+    );
 
-        const savedPlan = result.plan;
+    return { data: ids };
+  },
+} as DataProvider;
 
-        setPlans((current) => {
-          if (editingPlanId) {
-            return current.map((plan) =>
-              plan.id === savedPlan.id ? savedPlan : plan
-            );
-          }
+const nullableDateFormat = (value: string | null | undefined): string =>
+  value ? value.slice(0, 16) : '';
 
-          return [...current, savedPlan].sort(
-            (left, right) => left.sortOrder - right.sortOrder
-          );
-        });
-        setEditingPlanId(null);
-        setPlanForm(emptyPlanForm);
-        router.refresh();
-      } catch (requestError) {
-        setError(
-          requestError instanceof Error
-            ? requestError.message
-            : 'Не удалось сохранить тариф'
-        );
-      }
-    });
-  };
+const AdminDashboard = () => (
+  <Card>
+    <CardContent>
+      <Typography gutterBottom variant="h5">
+        ZeroQuest Admin
+      </Typography>
+      <Typography color="text.secondary" variant="body2">
+        Управление тарифами и промокодами поверх существующих серверных API.
+      </Typography>
+    </CardContent>
+  </Card>
+);
 
-  const submitPromoCode = () => {
-    setError(null);
-    startTransition(async () => {
-      try {
-        const payload = {
-          appliesToPlanIds: promoForm.appliesToPlanIds,
-          code: promoForm.code.trim(),
-          description: promoForm.description.trim(),
-          discountType: promoForm.discountType,
-          discountValue: promoForm.discountValue,
-          expiresAt: promoForm.expiresAt ? new Date(promoForm.expiresAt).toISOString() : null,
-          isActive: promoForm.isActive,
-          usageLimit: promoForm.usageLimit,
-        };
-        const response = await fetch(
-          editingPromoCodeId
-            ? `/api/admin/promo-codes/${editingPromoCodeId}`
-            : '/api/admin/promo-codes',
-          {
-            method: editingPromoCodeId ? 'PATCH' : 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const result = (await response.json()) as {
-          error?: string;
-          promoCode?: PromoCode;
-        };
+const PlanList = () => (
+  <List resource="plans" sort={{ field: 'updatedAt', order: 'DESC' }}>
+    <Datagrid bulkActionButtons={false} rowClick="edit">
+      <TextField source="title" label="Название" />
+      <TextField source="slug" label="Slug" />
+      <NumberField source="priceRub" label="Цена, ₽" />
+      <NumberField source="durationDays" label="Дней" />
+      <NumberField source="inboundId" label="Inbound" />
+      <BooleanField source="allowsCustomTraffic" label="Кастом" />
+      <BooleanField source="isActive" label="Активен" />
+      <BooleanField source="isFeatured" label="Лучший" />
+      <DateField source="updatedAt" label="Обновлён" showTime />
+      <EditButton />
+      <DeleteButton mutationMode="pessimistic" />
+    </Datagrid>
+  </List>
+);
 
-        if (!response.ok || !result.promoCode) {
-          throw new Error(result.error || 'Не удалось сохранить промокод');
-        }
+const PlanForm = () => (
+  <SimpleForm>
+    <TextInput source="title" label="Название" validate={[required()]} />
+    <TextInput source="slug" label="Slug" validate={[required()]} />
+    <TextInput source="description" label="Описание" multiline validate={[required()]} />
+    <TextInput source="ctaText" label="Текст кнопки" validate={[required()]} />
+    <TextInput source="badge" label="Badge" format={(value) => value ?? ''} parse={toNullableText} />
+    <TextInput
+      source="highlight"
+      label="Короткий акцент"
+      format={(value) => value ?? ''}
+      parse={toNullableText}
+    />
+    <NumberInput source="priceRub" label="Цена, ₽" validate={[required(), minValue(0)]} />
+    <NumberInput source="durationDays" label="Срок, дней" validate={[required(), minValue(1)]} />
+    <NumberInput source="inboundId" label="Inbound ID" validate={[required(), minValue(1)]} />
+    <NumberInput
+      source="trafficLimitGb"
+      label="Лимит трафика, GB"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <NumberInput
+      source="speedLimitMbps"
+      label="Скорость, Мбит/с"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <BooleanInput source="isActive" label="Активен" />
+    <BooleanInput source="isFeatured" label="Лучший выбор" />
+    <BooleanInput source="allowsCustomTraffic" label="План с кастомным объёмом" />
+    <NumberInput
+      source="customPricePerGbRub"
+      label="Цена за 1 GB, ₽"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <NumberInput
+      source="customTrafficMinGb"
+      label="Минимум GB"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <NumberInput
+      source="customTrafficMaxGb"
+      label="Максимум GB"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <TextArrayInput source="features" label="Преимущества" validate={[required()]} />
+  </SimpleForm>
+);
 
-        const savedPromoCode = result.promoCode;
+const PlanEdit = () => (
+  <Edit mutationMode="pessimistic" resource="plans">
+    <PlanForm />
+  </Edit>
+);
 
-        setPromoCodes((current) => {
-          if (editingPromoCodeId) {
-            return current.map((promoCode) =>
-              promoCode.id === savedPromoCode.id ? savedPromoCode : promoCode
-            );
-          }
+const PlanCreate = () => (
+  <Create resource="plans">
+    <PlanForm />
+  </Create>
+);
 
-          return [savedPromoCode, ...current];
-        });
-        setEditingPromoCodeId(null);
-        setPromoForm(emptyPromoForm);
-        router.refresh();
-      } catch (requestError) {
-        setError(
-          requestError instanceof Error
-            ? requestError.message
-            : 'Не удалось сохранить промокод'
-        );
-      }
-    });
-  };
+const PromoCodeList = () => (
+  <List resource="promo-codes" sort={{ field: 'createdAt', order: 'DESC' }}>
+    <Datagrid bulkActionButtons={false} rowClick="edit">
+      <TextField source="code" label="Код" />
+      <TextField source="description" label="Описание" />
+      <TextField source="discountType" label="Тип" />
+      <NumberField source="discountValue" label="Скидка" />
+      <NumberField source="usedCount" label="Исп." />
+      <NumberField source="usageLimit" label="Лимит" />
+      <BooleanField source="isActive" label="Активен" />
+      <DateField source="expiresAt" label="Действует до" showTime />
+      <EditButton />
+      <DeleteButton mutationMode="pessimistic" />
+    </Datagrid>
+  </List>
+);
 
-  const deleteEntity = (
-    path: string,
-    onSuccess: () => void,
-    fallbackMessage: string
-  ) => {
-    setError(null);
-    startTransition(async () => {
-      try {
-        const response = await fetch(path, {
-          method: 'DELETE',
-        });
-        const result = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null;
+const PromoCodeForm = () => (
+  <SimpleForm>
+    <TextInput source="code" label="Код" validate={[required()]} />
+    <TextInput source="description" label="Описание" multiline validate={[required()]} />
+    <SelectInput
+      source="discountType"
+      label="Тип скидки"
+      choices={[
+        { id: 'percent', name: 'Процент' },
+        { id: 'fixed', name: 'Фиксированная сумма' },
+      ]}
+      validate={[required()]}
+    />
+    <NumberInput
+      source="discountValue"
+      label="Размер скидки"
+      validate={[required(), minValue(1), maxValue(1_000_000)]}
+    />
+    <NumberInput
+      source="usageLimit"
+      label="Лимит использований"
+      format={(value) => value ?? ''}
+      parse={toNullableNumber}
+    />
+    <DateTimeInput
+      source="expiresAt"
+      label="Действует до"
+      format={nullableDateFormat}
+      parse={(value) => (typeof value === 'string' && value ? new Date(value).toISOString() : null)}
+    />
+    <ReferenceArrayInput
+      source="appliesToPlanIds"
+      reference="plans"
+      label="Доступные тарифы"
+    >
+      <SelectArrayInput optionText="title" />
+    </ReferenceArrayInput>
+    <BooleanInput source="isActive" label="Активен" />
+  </SimpleForm>
+);
 
-        if (!response.ok) {
-          throw new Error(result?.error || fallbackMessage);
-        }
+const PromoCodeEdit = () => (
+  <Edit mutationMode="pessimistic" resource="promo-codes">
+    <PromoCodeForm />
+  </Edit>
+);
 
-        onSuccess();
-        router.refresh();
-      } catch (requestError) {
-        setError(
-          requestError instanceof Error ? requestError.message : fallbackMessage
-        );
-      }
-    });
-  };
+const PromoCodeCreate = () => (
+  <Create resource="promo-codes">
+    <PromoCodeForm />
+  </Create>
+);
 
+export function AdminPage() {
   return (
-    <div className={styles.page}>
-      <Container size="xl">
-        <Stack gap="xl">
-          <Paper className={styles.hero} p={{ base: 'xl', md: 32 }} radius="24px">
-            <Stack gap="lg">
-              <Group justify="space-between" wrap="wrap">
-                <Stack className={styles.heroIntro} gap="sm">
-                  <Group gap="xs">
-                    <Badge color="horizon" variant="light">
-                      Admin
-                    </Badge>
-                    <Badge color="gray" variant="light">
-                      @{user.login}
-                    </Badge>
-                  </Group>
-                  <Text className={styles.eyebrow}>Управление витриной</Text>
-                  <Title className={styles.heroTitle} order={1}>
-                    Тарифы, промокоды и публикация изменений в одном месте.
-                  </Title>
-                  <Text className={styles.muted}>
-                    Все изменения применяются сразу. Тарифы берутся из БД,
-                    промокоды учитываются при выдаче доступа, а данные в БД
-                    хранятся в зашифрованном виде.
-                  </Text>
-                </Stack>
-
-                <Group>
-                  <Button component={Link} href="/" variant="light">
-                    На витрину
-                  </Button>
-                  <LogoutButton />
-                </Group>
-              </Group>
-
-              <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-                <Paper className={styles.statCard} p="lg" radius="20px">
-                  <Stack gap={6}>
-                    <Text className={styles.statLabel} size="sm">
-                      Активных тарифов
-                    </Text>
-                    <Title className={styles.statValue} order={3}>
-                      {plans.filter((plan) => plan.isActive).length}
-                    </Title>
-                  </Stack>
-                </Paper>
-                <Paper className={styles.statCard} p="lg" radius="20px">
-                  <Stack gap={6}>
-                    <Text className={styles.statLabel} size="sm">
-                      Промокодов
-                    </Text>
-                    <Title className={styles.statValue} order={3}>
-                      {promoCodes.length}
-                    </Title>
-                  </Stack>
-                </Paper>
-                <Paper className={styles.statCard} p="lg" radius="20px">
-                  <Stack gap={6}>
-                    <Text className={styles.statLabel} size="sm">
-                      Активных промокодов
-                    </Text>
-                    <Title className={styles.statValue} order={3}>
-                      {promoCodes.filter((promoCode) => promoCode.isActive).length}
-                    </Title>
-                  </Stack>
-                </Paper>
-              </SimpleGrid>
-            </Stack>
-          </Paper>
-
-          {error ? (
-            <Paper className={styles.errorCard} p="lg" radius="20px">
-              <Text c="red.4">{error}</Text>
-            </Paper>
-          ) : null}
-
-          <Tabs className={styles.tabs} defaultValue="plans">
-            <Tabs.List>
-              <Tabs.Tab value="plans">Тарифы</Tabs.Tab>
-              <Tabs.Tab value="promo-codes">Промокоды</Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel pt="lg" value="plans">
-              <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="xl">
-                <Paper className={styles.panel} p="xl" radius="24px">
-                  <Stack gap="md">
-                    <Group justify="space-between">
-                      <Title className={styles.sectionTitle} order={3}>
-                        {editingPlanId ? 'Редактирование тарифа' : 'Новый тариф'}
-                      </Title>
-                      {editingPlanId ? (
-                        <Button
-                          color="gray"
-                          onClick={() => {
-                            setEditingPlanId(null);
-                            setPlanForm(emptyPlanForm);
-                          }}
-                          variant="subtle"
-                        >
-                          Сбросить
-                        </Button>
-                      ) : null}
-                    </Group>
-
-                    <TextInput
-                      label="Название"
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, title: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.title}
-                    />
-
-                    <TextInput
-                      description="Например: extended-premium"
-                      label="Slug"
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, slug: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.slug}
-                    />
-
-                    <Textarea
-                      label="Описание"
-                      minRows={3}
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, description: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.description}
-                    />
-
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-                      <NumberInput
-                        label="Цена, ₽"
-                        min={0}
-                        onChange={(value) => {
-                          setPlanForm((current) => ({
-                            ...current,
-                            priceRub: typeof value === 'number' ? value : 0,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.priceRub}
-                      />
-                      <NumberInput
-                        label="Дней"
-                        min={1}
-                        onChange={(value) => {
-                          setPlanForm((current) => ({
-                            ...current,
-                            durationDays: typeof value === 'number' ? value : 30,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.durationDays}
-                      />
-                      <NumberInput
-                        label="Лимит трафика, GB"
-                        min={1}
-                        onChange={(value) => {
-                          setPlanForm((current) => ({
-                            ...current,
-                            trafficLimitGb:
-                              typeof value === 'number' ? value : null,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.trafficLimitGb ?? undefined}
-                      />
-                      <NumberInput
-                        label="Скорость, Мбит/с"
-                        min={1}
-                        onChange={(value) => {
-                          setPlanForm((current) => ({
-                            ...current,
-                            speedLimitMbps:
-                              typeof value === 'number' ? value : null,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.speedLimitMbps ?? undefined}
-                      />
-                      <NumberInput
-                        label="Inbound ID"
-                        min={1}
-                        onChange={(value) => {
-                          setPlanForm((current) => ({
-                            ...current,
-                            inboundId: typeof value === 'number' ? value : 1,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.inboundId}
-                      />
-                      <TextInput
-                        label="Badge"
-                        onChange={(event) => {
-                          const value = event.currentTarget.value;
-                          setPlanForm((current) => ({ ...current, badge: value }));
-                        }}
-                        styles={fieldStyles}
-                        value={planForm.badge}
-                      />
-                    </SimpleGrid>
-
-                    <TextInput
-                      label="CTA текст"
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, ctaText: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.ctaText}
-                    />
-
-                    <TextInput
-                      label="Короткий highlight"
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, highlight: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.highlight}
-                    />
-
-                    <Textarea
-                      description="Одна выгода на строку"
-                      label="Преимущества"
-                      minRows={4}
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPlanForm((current) => ({ ...current, features: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={planForm.features}
-                    />
-
-                    <Group>
-                      <Checkbox
-                        checked={planForm.isActive}
-                        label="Активен"
-                        onChange={(event) => {
-                          const checked = event.currentTarget.checked;
-                          setPlanForm((current) => ({
-                            ...current,
-                            isActive: checked,
-                          }));
-                        }}
-                      />
-                      <Checkbox
-                        checked={planForm.isFeatured}
-                        label="Выделять как лучший"
-                        onChange={(event) => {
-                          const checked = event.currentTarget.checked;
-                          setPlanForm((current) => ({
-                            ...current,
-                            isFeatured: checked,
-                          }));
-                        }}
-                      />
-                    </Group>
-
-                    <Button loading={isPending} onClick={submitPlan}>
-                      {editingPlanId ? 'Сохранить тариф' : 'Создать тариф'}
-                    </Button>
-                  </Stack>
-                </Paper>
-
-                <Paper className={styles.tableCard} p="xl" radius="24px">
-                  <Stack gap="md">
-                    <Title className={styles.sectionTitle} order={3}>
-                      Текущие тарифы
-                    </Title>
-                    <Table.ScrollContainer className={styles.table} minWidth={720}>
-                      <Table highlightOnHover>
-                        <Table.Thead>
-                          <Table.Tr>
-                            <Table.Th>Тариф</Table.Th>
-                            <Table.Th>Цена</Table.Th>
-                            <Table.Th>Статус</Table.Th>
-                            <Table.Th>Inbound</Table.Th>
-                            <Table.Th>Действия</Table.Th>
-                          </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>
-                          {plans.map((plan) => (
-                            <Table.Tr key={plan.id}>
-                              <Table.Td>
-                                <Stack gap={2}>
-                                  <Text className={styles.rowTitle} fw={600}>
-                                    {plan.title}
-                                  </Text>
-                                  <Text className={styles.muted} size="sm">
-                                    {plan.slug}
-                                  </Text>
-                                </Stack>
-                              </Table.Td>
-                              <Table.Td>{plan.priceRub} ₽</Table.Td>
-                              <Table.Td>{plan.isActive ? 'Активен' : 'Скрыт'}</Table.Td>
-                              <Table.Td>{plan.inboundId}</Table.Td>
-                              <Table.Td>
-                                <Group gap="xs">
-                                  <Button
-                                    color="gray"
-                                    onClick={() => {
-                                      setEditingPlanId(plan.id);
-                                      setPlanForm(planToFormState(plan));
-                                    }}
-                                    size="compact-sm"
-                                    variant="subtle"
-                                  >
-                                    Изменить
-                                  </Button>
-                                  <Button
-                                    color="red"
-                                    onClick={() => {
-                                      deleteEntity(
-                                        `/api/admin/plans/${plan.id}`,
-                                        () => {
-                                          setPlans((current) =>
-                                            current.filter((item) => item.id !== plan.id)
-                                          );
-                                          if (editingPlanId === plan.id) {
-                                            setEditingPlanId(null);
-                                            setPlanForm(emptyPlanForm);
-                                          }
-                                        },
-                                        'Не удалось удалить тариф'
-                                      );
-                                    }}
-                                    size="compact-sm"
-                                    variant="subtle"
-                                  >
-                                    Удалить
-                                  </Button>
-                                </Group>
-                              </Table.Td>
-                            </Table.Tr>
-                          ))}
-                        </Table.Tbody>
-                      </Table>
-                    </Table.ScrollContainer>
-                  </Stack>
-                </Paper>
-              </SimpleGrid>
-            </Tabs.Panel>
-
-            <Tabs.Panel pt="lg" value="promo-codes">
-              <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="xl">
-                <Paper className={styles.panel} p="xl" radius="24px">
-                  <Stack gap="md">
-                    <Group justify="space-between">
-                      <Title className={styles.sectionTitle} order={3}>
-                        {editingPromoCodeId ? 'Редактирование промокода' : 'Новый промокод'}
-                      </Title>
-                      {editingPromoCodeId ? (
-                        <Button
-                          color="gray"
-                          onClick={() => {
-                            setEditingPromoCodeId(null);
-                            setPromoForm(emptyPromoForm);
-                          }}
-                          variant="subtle"
-                        >
-                          Сбросить
-                        </Button>
-                      ) : null}
-                    </Group>
-
-                    <TextInput
-                      label="Код"
-                      onChange={(event) => {
-                        const value = event.currentTarget.value.toUpperCase();
-                        setPromoForm((current) => ({ ...current, code: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={promoForm.code}
-                    />
-
-                    <Textarea
-                      label="Описание"
-                      minRows={3}
-                      onChange={(event) => {
-                        const value = event.currentTarget.value;
-                        setPromoForm((current) => ({ ...current, description: value }));
-                      }}
-                      styles={fieldStyles}
-                      value={promoForm.description}
-                    />
-
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-                      <Select
-                        data={[
-                          { label: 'Процент', value: 'percent' },
-                          { label: 'Фиксированная сумма', value: 'fixed' },
-                        ]}
-                        label="Тип скидки"
-                        onChange={(value) => {
-                          setPromoForm((current) => ({
-                            ...current,
-                            discountType: value === 'fixed' ? 'fixed' : 'percent',
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={promoForm.discountType}
-                      />
-                      <NumberInput
-                        label={
-                          promoForm.discountType === 'percent'
-                            ? 'Скидка, %'
-                            : 'Скидка, ₽'
-                        }
-                        min={1}
-                        onChange={(value) => {
-                          setPromoForm((current) => ({
-                            ...current,
-                            discountValue:
-                              typeof value === 'number' ? value : current.discountValue,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={promoForm.discountValue}
-                      />
-                      <NumberInput
-                        label="Лимит использований"
-                        min={1}
-                        onChange={(value) => {
-                          setPromoForm((current) => ({
-                            ...current,
-                            usageLimit: typeof value === 'number' ? value : null,
-                          }));
-                        }}
-                        styles={fieldStyles}
-                        value={promoForm.usageLimit ?? undefined}
-                      />
-                      <TextInput
-                        description="Оставьте пустым для бессрочного"
-                        label="Действует до"
-                        onChange={(event) => {
-                          const value = event.currentTarget.value;
-                          setPromoForm((current) => ({ ...current, expiresAt: value }));
-                        }}
-                        placeholder="2026-12-31T23:59"
-                        styles={fieldStyles}
-                        value={promoForm.expiresAt}
-                      />
-                    </SimpleGrid>
-
-                    <Select
-                      clearable
-                      data={planOptions}
-                      description="Выберите один тариф и нажмите добавить. Можно повторить несколько раз."
-                      label="Применить к тарифу"
-                      onChange={(value) => {
-                        if (!value) {
-                          return;
-                        }
-
-                        setPromoForm((current) => ({
-                          ...current,
-                          appliesToPlanIds: current.appliesToPlanIds.includes(value)
-                            ? current.appliesToPlanIds
-                            : [...current.appliesToPlanIds, value],
-                        }));
-                      }}
-                      styles={fieldStyles}
-                      value={null}
-                    />
-
-                    <Group gap="xs">
-                      {promoForm.appliesToPlanIds.map((planId) => (
-                        <Badge
-                          color="gray"
-                          key={planId}
-                          onClick={() => {
-                            setPromoForm((current) => ({
-                              ...current,
-                              appliesToPlanIds: current.appliesToPlanIds.filter(
-                                (item) => item !== planId
-                              ),
-                            }));
-                          }}
-                          style={{ cursor: 'pointer' }}
-                          variant="light"
-                        >
-                          {plans.find((plan) => plan.id === planId)?.title || planId}
-                        </Badge>
-                      ))}
-                    </Group>
-
-                    <Checkbox
-                      checked={promoForm.isActive}
-                      label="Промокод активен"
-                      onChange={(event) => {
-                        const checked = event.currentTarget.checked;
-                        setPromoForm((current) => ({
-                          ...current,
-                          isActive: checked,
-                        }));
-                      }}
-                    />
-
-                    <Button loading={isPending} onClick={submitPromoCode}>
-                      {editingPromoCodeId
-                        ? 'Сохранить промокод'
-                        : 'Создать промокод'}
-                    </Button>
-                  </Stack>
-                </Paper>
-
-                <Paper className={styles.tableCard} p="xl" radius="24px">
-                  <Stack gap="md">
-                    <Title className={styles.sectionTitle} order={3}>
-                      Промокоды
-                    </Title>
-                    <Table.ScrollContainer className={styles.table} minWidth={720}>
-                      <Table highlightOnHover>
-                        <Table.Thead>
-                          <Table.Tr>
-                            <Table.Th>Код</Table.Th>
-                            <Table.Th>Скидка</Table.Th>
-                            <Table.Th>Использовано</Table.Th>
-                            <Table.Th>Статус</Table.Th>
-                            <Table.Th>Действия</Table.Th>
-                          </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>
-                          {promoCodes.map((promoCode) => (
-                            <Table.Tr key={promoCode.id}>
-                              <Table.Td>
-                                <Stack gap={2}>
-                                  <Text className={styles.rowTitle} fw={600}>
-                                    {promoCode.code}
-                                  </Text>
-                                  <Text className={styles.muted} size="sm">
-                                    {promoCode.description}
-                                  </Text>
-                                </Stack>
-                              </Table.Td>
-                              <Table.Td>
-                                {promoCode.discountType === 'percent'
-                                  ? `${promoCode.discountValue}%`
-                                  : `${promoCode.discountValue} ₽`}
-                              </Table.Td>
-                              <Table.Td>
-                                {promoCode.usedCount}
-                                {promoCode.usageLimit !== null
-                                  ? ` / ${promoCode.usageLimit}`
-                                  : ''}
-                              </Table.Td>
-                              <Table.Td>
-                                {promoCode.isActive ? 'Активен' : 'Отключён'}
-                              </Table.Td>
-                              <Table.Td>
-                                <Group gap="xs">
-                                  <Button
-                                    color="gray"
-                                    onClick={() => {
-                                      setEditingPromoCodeId(promoCode.id);
-                                      setPromoForm(promoToFormState(promoCode));
-                                    }}
-                                    size="compact-sm"
-                                    variant="subtle"
-                                  >
-                                    Изменить
-                                  </Button>
-                                  <Button
-                                    color="red"
-                                    onClick={() => {
-                                      deleteEntity(
-                                        `/api/admin/promo-codes/${promoCode.id}`,
-                                        () => {
-                                          setPromoCodes((current) =>
-                                            current.filter((item) => item.id !== promoCode.id)
-                                          );
-                                          if (editingPromoCodeId === promoCode.id) {
-                                            setEditingPromoCodeId(null);
-                                            setPromoForm(emptyPromoForm);
-                                          }
-                                        },
-                                        'Не удалось удалить промокод'
-                                      );
-                                    }}
-                                    size="compact-sm"
-                                    variant="subtle"
-                                  >
-                                    Удалить
-                                  </Button>
-                                </Group>
-                              </Table.Td>
-                            </Table.Tr>
-                          ))}
-                        </Table.Tbody>
-                      </Table>
-                    </Table.ScrollContainer>
-                  </Stack>
-                </Paper>
-              </SimpleGrid>
-            </Tabs.Panel>
-          </Tabs>
-        </Stack>
-      </Container>
-    </div>
+    <Admin basename="/admin" dashboard={AdminDashboard} dataProvider={adminDataProvider}>
+      <Resource
+        create={PlanCreate}
+        edit={PlanEdit}
+        list={PlanList}
+        name="plans"
+        options={{ label: 'Тарифы' }}
+      />
+      <Resource
+        create={PromoCodeCreate}
+        edit={PromoCodeEdit}
+        list={PromoCodeList}
+        name="promo-codes"
+        options={{ label: 'Промокоды' }}
+      />
+    </Admin>
   );
 }
