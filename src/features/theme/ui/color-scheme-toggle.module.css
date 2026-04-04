@@ -1,0 +1,10 @@
+.toggle {
+  min-width: 126px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.label {
+  font-weight: 600;
+}

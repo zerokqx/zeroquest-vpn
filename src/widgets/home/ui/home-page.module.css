@@ -1,0 +1,159 @@
+.page {
+  padding: 32px 0 96px;
+}
+
+.hero,
+.viewerBlock,
+.pricing {
+  border: 1px solid var(--surface-border);
+  border-radius: 32px;
+  background: var(--surface);
+}
+
+.hero,
+.viewerBlock,
+.pricing {
+  padding: 2rem;
+}
+
+.heroHeader {
+  max-width: 42rem;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  max-width: 10ch;
+  color: var(--foreground-strong);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+}
+
+.heroLead,
+.sectionCopy,
+.proofLabel {
+  color: var(--muted);
+}
+
+.preview {
+  background: var(--background-subtle);
+}
+
+.previewDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-border);
+}
+
+.previewBlackHole {
+  min-height: 18rem;
+  border-radius: 20px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+}
+
+.previewInfo > * {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.previewLabel {
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.proofList {
+  list-style: none;
+}
+
+.proofItem {
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.proofValue,
+.planPrice,
+.planHighlight {
+  color: var(--foreground-strong);
+  font-weight: 700;
+}
+
+.proofValue {
+  font-size: 1.1rem;
+}
+
+.pricingHeader {
+  max-width: 44rem;
+}
+
+.planCard {
+  padding: 1.5rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  background: var(--background-subtle);
+}
+
+.planPrice {
+  font-size: 1.5rem;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.planFeatures {
+  list-style: none;
+  color: var(--muted);
+}
+
+.planFeatures li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.planFeatures li::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+@media (max-width: 75em) {
+  .heroTitle {
+    max-width: 12ch;
+  }
+}
+
+@media (max-width: 48em) {
+  .page {
+    padding-top: 20px;
+    padding-bottom: 64px;
+  }
+
+  .hero,
+  .viewerBlock,
+  .pricing {
+    padding: 1.25rem;
+    border-radius: 24px;
+  }
+
+  .heroTitle {
+    max-width: none;
+    font-size: clamp(2.3rem, 12vw, 4rem);
+  }
+
+  .previewBlackHole {
+    min-height: 13rem;
+  }
+}

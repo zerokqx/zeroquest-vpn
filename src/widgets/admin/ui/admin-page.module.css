@@ -1,0 +1,138 @@
+.page {
+  padding: 32px 0 96px;
+}
+
+.hero,
+.panel,
+.tableCard,
+.errorCard {
+  border: 1px solid var(--surface-border);
+  border-radius: 32px;
+  background: var(--surface);
+}
+
+.heroIntro {
+  max-width: 46rem;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  max-width: 14ch;
+  color: var(--foreground-strong);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.07em;
+}
+
+.sectionTitle,
+.rowTitle,
+.statValue {
+  color: var(--foreground-strong);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.statCard {
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  background: var(--background-subtle);
+}
+
+.statLabel {
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  letter-spacing: -0.05em;
+}
+
+.tabs :global(.mantine-Tabs-list) {
+  gap: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.tabs :global(.mantine-Tabs-tab) {
+  color: var(--muted-strong);
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-weight: 500;
+}
+
+.tabs :global(.mantine-Tabs-tab:hover) {
+  color: var(--foreground-strong);
+  background: transparent;
+}
+
+.tabs :global(.mantine-Tabs-tab[data-active='true']) {
+  color: var(--foreground-strong);
+  background: transparent;
+  border-bottom-color: var(--accent);
+}
+
+.table {
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  background: var(--background-subtle);
+}
+
+.table :global(.mantine-Table-table) {
+  color: var(--foreground);
+}
+
+.table :global(.mantine-Table-th) {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.table :global(.mantine-Table-td) {
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.table :global(.mantine-Table-tr:last-child .mantine-Table-td) {
+  border-bottom: 0;
+}
+
+.table :global(.mantine-Table-tr:hover .mantine-Table-td) {
+  background: color-mix(in srgb, var(--background-subtle) 82%, var(--accent-soft));
+}
+
+@media (max-width: 48em) {
+  .page {
+    padding-top: 20px;
+    padding-bottom: 64px;
+  }
+
+  .hero,
+  .panel,
+  .tableCard,
+  .errorCard {
+    border-radius: 24px;
+  }
+
+  .heroTitle {
+    max-width: none;
+    font-size: clamp(2rem, 12vw, 3.2rem);
+  }
+
+  .table {
+    border-radius: 20px;
+  }
+}

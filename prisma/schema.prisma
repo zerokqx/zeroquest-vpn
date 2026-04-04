@@ -1,0 +1,56 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "../generated/prisma"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model UserStore {
+  id          String              @id
+  role        String
+  loginLookup String              @unique @map("login_lookup")
+  payload     String              @db.Text
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @default(now()) @map("updated_at")
+  accesses    AccessRecordStore[]
+
+  @@map("users")
+}
+
+model PlanStore {
+  id        String   @id
+  slug      String   @unique
+  isActive  Boolean  @map("is_active")
+  sortOrder Int      @map("sort_order")
+  payload   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("plans")
+}
+
+model PromoCodeStore {
+  id         String   @id
+  codeLookup String   @unique @map("code_lookup")
+  payload    String   @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @map("updated_at")
+
+  @@map("promo_codes")
+}
+
+model AccessRecordStore {
+  id        String    @id
+  userId    String    @map("user_id")
+  planId    String    @map("plan_id")
+  payload   String    @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+  expiresAt DateTime  @map("expires_at")
+  user      UserStore @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("access_records")
+}

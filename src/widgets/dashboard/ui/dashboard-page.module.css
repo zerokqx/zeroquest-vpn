@@ -1,0 +1,141 @@
+.page {
+  padding: 32px 0 96px;
+}
+
+.hero,
+.devicesSection,
+.accountPanel,
+.plansSection,
+.emptyState,
+.planCard,
+.modalPanel {
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  border-radius: 32px;
+}
+
+.hero,
+.devicesSection,
+.accountPanel,
+.plansSection {
+  padding: 2rem;
+}
+
+.heroIntro {
+  max-width: 42rem;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  max-width: 11ch;
+  color: var(--foreground-strong);
+  font-size: clamp(2.5rem, 6vw, 4.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+}
+
+.heroCopy,
+.muted,
+.sectionMeta {
+  color: var(--muted);
+}
+
+.statCard {
+  padding: 1rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  background: var(--background-subtle);
+}
+
+.statLabel,
+.metricKey {
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  color: var(--foreground-strong);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.deviceCard {
+  padding: 1.25rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  background: var(--background-subtle);
+}
+
+.deviceTitle {
+  color: var(--foreground-strong);
+  font-size: 1.3rem;
+  letter-spacing: -0.04em;
+}
+
+.progressTrack {
+  background: var(--surface-border);
+}
+
+.uriBox {
+  padding: 0.95rem;
+  border-radius: 20px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+}
+
+.uriTextarea,
+.resultTextarea {
+  background: var(--background-subtle);
+  border-color: var(--surface-border);
+  color: var(--foreground);
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.emptyState {
+  padding: 1.5rem;
+}
+
+.planCard {
+  padding: 1.2rem;
+  background: var(--background-subtle);
+  border-radius: 24px;
+}
+
+.planPrice,
+.planSummary {
+  color: var(--foreground-strong);
+  font-weight: 700;
+}
+
+.planPrice {
+  font-size: 1.25rem;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 48em) {
+  .page {
+    padding-top: 20px;
+    padding-bottom: 64px;
+  }
+
+  .hero,
+  .devicesSection,
+  .accountPanel,
+  .plansSection {
+    padding: 1.25rem;
+    border-radius: 24px;
+  }
+
+  .heroTitle {
+    max-width: none;
+    font-size: clamp(2.2rem, 12vw, 3.8rem);
+  }
+}

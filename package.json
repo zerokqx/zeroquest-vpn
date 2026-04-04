@@ -6,12 +6,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma": "bash scripts/prisma-cli.sh",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:generate": "bash scripts/prisma-cli.sh generate",
+    "db:push": "bun run scripts/init-db.ts",
+    "db:seed": "bun run scripts/seed.ts",
+    "db:setup": "docker compose up -d postgres && bun run scripts/init-db.ts && bun run scripts/seed.ts",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f app"
   },
   "dependencies": {
+    "@mantine/core": "^9.0.0",
+    "@mantine/hooks": "^9.0.0",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "axios": "^1.14.0",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.2",
+    "lucide-react": "^1.7.0",
+    "motion": "^12.38.0",
     "next": "16.2.2",
+    "prisma": "^7.6.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -19,7 +42,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.2"
   },
   "ignoreScripts": [
     "sharp",

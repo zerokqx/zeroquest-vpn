@@ -1,17 +1,45 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-jetbrains-mono: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+  --font-montserrat: 'Montserrat', 'Inter', 'Segoe UI', sans-serif;
+  --background: #f5f5f5;
+  --background-subtle: #efefef;
+  --surface: #ffffff;
+  --surface-hover: #f7f7f7;
+  --surface-strong: #f1f1f1;
+  --surface-contrast: #121212;
+  --surface-border: #e5e5e5;
+  --foreground: #1c1c1c;
+  --foreground-strong: #0b0b0b;
+  --muted: #737373;
+  --muted-strong: #454545;
+  --accent: #8f3dff;
+  --accent-soft: rgba(143, 61, 255, 0.12);
+  --success-soft: rgba(25, 113, 194, 0.1);
+  --danger-soft: rgba(224, 49, 49, 0.1);
+  --header-height: 84px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root[data-mantine-color-scheme='dark'] {
+  --background: #0b0b0b;
+  --background-subtle: #121212;
+  --surface: #141414;
+  --surface-hover: #1c1c1c;
+  --surface-strong: #1f1f1f;
+  --surface-contrast: #f5f5f5;
+  --surface-border: #2b2b2b;
+  --foreground: #f5f5f5;
+  --foreground-strong: #ffffff;
+  --muted: #a1a1a1;
+  --muted-strong: #d4d4d4;
+  --accent: #aa68ff;
+  --accent-soft: rgba(170, 104, 255, 0.16);
+  --success-soft: rgba(25, 113, 194, 0.16);
+  --danger-soft: rgba(224, 49, 49, 0.16);
 }
 
 html {
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -22,13 +50,15 @@ body {
 
 body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jetbrains-mono), monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  min-height: calc(100vh - var(--header-height));
 }
 
 * {
@@ -42,8 +72,14 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  color: #ffffff;
+  background: var(--accent);
 }

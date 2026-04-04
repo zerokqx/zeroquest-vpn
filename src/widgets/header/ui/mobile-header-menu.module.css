@@ -1,0 +1,6 @@
+.identity {
+  padding: 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  background: var(--background-subtle);
+}

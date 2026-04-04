@@ -1,0 +1,58 @@
+.page {
+  padding: 0;
+}
+
+.authPanelWrap {
+  width: 100%;
+}
+
+.authPanel {
+  width: 100%;
+  max-width: 34rem;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+}
+
+.formCopy {
+  color: var(--muted);
+}
+
+.tabs :global(.mantine-Tabs-list) {
+  gap: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--surface-border);
+  border-radius: 0;
+}
+
+.tabs :global(.mantine-Tabs-tab) {
+  color: var(--muted-strong);
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-weight: 500;
+}
+
+.tabs :global(.mantine-Tabs-tab:hover) {
+  color: var(--foreground-strong);
+  background: transparent;
+}
+
+.tabs :global(.mantine-Tabs-tab[data-active='true']) {
+  color: var(--foreground-strong);
+  background: transparent;
+  border-bottom-color: var(--accent);
+}
+
+:root[data-mantine-color-scheme='dark'] .tabs :global(.mantine-Tabs-tab) {
+  color: var(--muted-strong);
+}
+
+:root[data-mantine-color-scheme='dark'] .tabs :global(.mantine-Tabs-tab[data-active='true']) {
+  color: var(--foreground-strong);
+}
+
+@media (max-width: 48em) {
+  .page {
+    padding: 0;
+  }
+}

@@ -1,0 +1,97 @@
+.wrap {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+  border-bottom: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
+}
+
+.bar {
+  min-height: var(--header-height);
+  padding: 14px 0;
+}
+
+.primaryRow {
+  min-width: 0;
+}
+
+.brandLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brandMark {
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  color: var(--foreground-strong);
+  font-weight: 700;
+}
+
+.brandName {
+  color: var(--foreground-strong);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brandCopy {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.navList {
+  gap: 1rem;
+}
+
+.navLink {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.navLink:hover {
+  color: var(--foreground-strong);
+}
+
+.actions {
+  margin-left: auto;
+}
+
+.identity {
+  padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+}
+
+.identityName {
+  color: var(--foreground-strong);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.identityCopy {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.mobileOnly {
+  margin-left: auto;
+}
+
+@media (max-width: 48em) {
+  .wrap {
+    position: relative;
+  }
+
+  .brandCopy {
+    display: none;
+  }
+}

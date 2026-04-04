@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## VPN Shop
 
-## Getting Started
+Next.js + Bun project for selling VPN access. The first implemented part is a server-side proxy to your `3x-ui` panel.
 
-First, run the development server:
+## Run
+
+Create the local env file if needed:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+cp .env.example .env.local
+```
+
+Start development:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the whole stack in Docker:
 
-## Learn More
+```bash
+docker compose up -d --build
+```
 
-To learn more about Next.js, take a look at the following resources:
+App will be available on `http://localhost:5901`, PostgreSQL on `localhost:5433`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 3x-ui API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Implemented endpoints:
 
-## Deploy on Vercel
+- `GET /api/plans`
+- `POST /api/access/claim`
+- `GET /api/3x-ui/session/status`
+- `POST /api/3x-ui/session/login`
+- `POST /api/3x-ui/session/logout`
+- `ALL /api/3x-ui/proxy/*`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Example:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+curl http://localhost:3000/api/plans
+curl -X POST http://localhost:3000/api/access/claim \
+  -H 'Content-Type: application/json' \
+  -d '{"planId":"free-10gb-month","name":"Murad iPhone"}'
+curl -X POST http://localhost:3000/api/access/claim \
+  -H 'Content-Type: application/json' \
+  -d '{"planId":"extended-unlimited-month","name":"Murad MacBook"}'
+curl -X POST http://localhost:3000/api/3x-ui/session/login
+curl http://localhost:3000/api/3x-ui/proxy/panel/api/inbounds/list
+```
+
+Current limitation:
+
+- upstream `3x-ui` admin session is stored in process memory for now.
