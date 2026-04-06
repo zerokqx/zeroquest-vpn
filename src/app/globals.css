@@ -17,6 +17,11 @@
   --success-soft: rgba(25, 113, 194, 0.1);
   --danger-soft: rgba(224, 49, 49, 0.1);
   --header-height: 84px;
+  --atmosphere-primary: rgba(143, 61, 255, 0.18);
+  --atmosphere-secondary: rgba(71, 163, 255, 0.14);
+  --atmosphere-tertiary: rgba(255, 196, 96, 0.12);
+  --atmosphere-surface: rgba(255, 255, 255, 0.5);
+  --atmosphere-shadow: rgba(11, 11, 11, 0.08);
 }
 
 :root[data-mantine-color-scheme='dark'] {
@@ -35,6 +40,11 @@
   --accent-soft: rgba(170, 104, 255, 0.16);
   --success-soft: rgba(25, 113, 194, 0.16);
   --danger-soft: rgba(224, 49, 49, 0.16);
+  --atmosphere-primary: rgba(170, 104, 255, 0.26);
+  --atmosphere-secondary: rgba(91, 171, 255, 0.2);
+  --atmosphere-tertiary: rgba(255, 178, 82, 0.16);
+  --atmosphere-surface: rgba(255, 255, 255, 0.06);
+  --atmosphere-shadow: rgba(0, 0, 0, 0.34);
 }
 
 html {
@@ -49,12 +59,89 @@ body {
 }
 
 body {
+  position: relative;
   min-height: 100%;
+  isolation: isolate;
   color: var(--foreground);
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 14% 0%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 56%),
+    radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--atmosphere-secondary) 38%, transparent) 0%, transparent 48%),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--atmosphere-shadow) 44%, transparent) 0%, transparent 62%);
   font-family: var(--font-jetbrains-mono), monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 2;
+}
+
+.app-atmosphere {
+  position: fixed;
+  inset: -18vh -14vw;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.app-atmosphere__beam,
+.app-atmosphere__veil {
+  position: absolute;
+  inset: auto;
+  pointer-events: none;
+}
+
+.app-atmosphere__beam {
+  border-radius: 999px;
+  filter: blur(110px);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  will-change: transform, opacity;
+  animation: atmosphereFloat 18s ease-in-out infinite;
+}
+
+.app-atmosphere__beam--north {
+  top: -16vh;
+  left: -8vw;
+  width: 46vw;
+  height: 40vw;
+  background:
+    radial-gradient(circle at center, var(--atmosphere-primary) 0%, transparent 76%);
+}
+
+.app-atmosphere__beam--east {
+  top: 16vh;
+  right: -18vw;
+  width: 42vw;
+  height: 48vw;
+  background:
+    radial-gradient(circle at center, var(--atmosphere-secondary) 0%, transparent 74%);
+  animation-duration: 22s;
+  animation-delay: -6s;
+}
+
+.app-atmosphere__beam--south {
+  left: 22vw;
+  top: 62vh;
+  width: 54vw;
+  height: 34vw;
+  background:
+    radial-gradient(circle at center, var(--atmosphere-tertiary) 0%, transparent 78%);
+  animation-duration: 24s;
+  animation-delay: -11s;
+}
+
+.app-atmosphere__veil {
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 12%, var(--atmosphere-surface) 0%, transparent 36%),
+    radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--atmosphere-secondary) 42%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 58% 58%, color-mix(in srgb, var(--atmosphere-primary) 38%, transparent) 0%, transparent 38%),
+    radial-gradient(circle at 12% 92%, color-mix(in srgb, var(--atmosphere-shadow) 42%, transparent) 0%, transparent 40%);
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
 }
 
 main {
@@ -82,4 +169,43 @@ select {
 ::selection {
   color: #ffffff;
   background: var(--accent);
+}
+
+@keyframes atmosphereFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2vw, 1.5vh, 0) scale(1.06);
+  }
+}
+
+@media (max-width: 48em) {
+  .app-atmosphere__beam {
+    filter: blur(74px);
+  }
+
+  .app-atmosphere__beam--north,
+  .app-atmosphere__beam--east,
+  .app-atmosphere__beam--south {
+    width: 78vw;
+    height: 72vw;
+  }
+
+  .app-atmosphere__beam--north {
+    top: -10vh;
+    left: -18vw;
+  }
+
+  .app-atmosphere__beam--east {
+    top: 22vh;
+    right: -24vw;
+  }
+
+  .app-atmosphere__beam--south {
+    left: 0;
+    top: 62vh;
+  }
 }

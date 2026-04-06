@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { cache } from 'react';
 import {
   createLookupHash,
   decryptJson,
@@ -61,7 +62,7 @@ export const findUserByLogin = async (
   };
 };
 
-export const findUserById = async (userId: string): Promise<User | null> => {
+export const findUserById = cache(async (userId: string): Promise<User | null> => {
   const prisma = getPrismaClient();
   const user = await prisma.userStore.findUnique({
     where: {
@@ -76,7 +77,7 @@ export const findUserById = async (userId: string): Promise<User | null> => {
   });
 
   return user ? toUser(user) : null;
-};
+});
 
 export const createUser = async (
   login: string,

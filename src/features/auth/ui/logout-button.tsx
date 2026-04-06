@@ -3,7 +3,7 @@
 import { Button } from '@mantine/core';
 import type { ReactNode } from 'react';
 import { useTransition } from 'react';
-import { logoutRequest } from '../api/client';
+import { logoutAction } from '../server/actions';
 
 interface LogoutButtonProps {
   fullWidth?: boolean;
@@ -22,8 +22,7 @@ export function LogoutButton({ fullWidth = false, leftSection }: LogoutButtonPro
       onClick={() => {
         startTransition(async () => {
           try {
-            await logoutRequest();
-            window.location.assign('/');
+            await logoutAction();
           } catch (error) {
             console.error(error);
           }

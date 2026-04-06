@@ -10,6 +10,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import Link from 'next/link';
 import type { PublicPlan } from '@/entities/plan/model/types';
 import type { User } from '@/entities/user/model/types';
 import { BlackHoleStage } from '@/shared/ui/black-hole-stage/black-hole-stage';
@@ -49,13 +50,17 @@ export function HomePage({ plans, viewer }: HomePageProps) {
               <Group gap="sm">
                 {viewer ? (
                   <>
-                    <Button component="a" href="/dashboard" size="md">
-                      Открыть dashboard
-                    </Button>
-                    {viewer.role === 'admin' ? (
-                      <Button component="a" href="/admin" size="md" variant="light">
-                        Открыть admin
+                    <Link href="/dashboard">
+                      <Button component="span" size="md">
+                        Открыть dashboard
                       </Button>
+                    </Link>
+                    {viewer.role === 'admin' ? (
+                      <Link href="/admin">
+                        <Button component="span" size="md" variant="light">
+                          Открыть admin
+                        </Button>
+                      </Link>
                     ) : null}
                   </>
                 ) : (
@@ -63,9 +68,11 @@ export function HomePage({ plans, viewer }: HomePageProps) {
                     <Button component="a" href="#plans" size="md">
                       Смотреть тарифы
                     </Button>
-                    <Button component="a" href="/auth?mode=register" size="md" variant="light">
-                      Регистрация
-                    </Button>
+                    <Link href="/auth?mode=register">
+                      <Button component="span" size="md" variant="light">
+                        Регистрация
+                      </Button>
+                    </Link>
                   </>
                 )}
               </Group>
@@ -140,9 +147,11 @@ export function HomePage({ plans, viewer }: HomePageProps) {
               </Text>
             </Stack>
 
-            <Button component="a" href="/dashboard" size="md">
-              Перейти в dashboard
-            </Button>
+            <Link href="/dashboard">
+              <Button component="span" size="md">
+                Перейти в dashboard
+              </Button>
+            </Link>
           </Group>
         ) : (
           <section className={styles.pricing} id="plans">
@@ -200,13 +209,14 @@ export function HomePage({ plans, viewer }: HomePageProps) {
                         ? 'Сами выбираете объём трафика'
                         : plan.highlight || plan.features[0]}
                     </Text>
-                    <Button
-                      component="a"
-                      href="/auth?mode=register"
-                      variant={plan.isFeatured ? 'filled' : 'light'}
-                    >
-                      {plan.ctaText}
-                    </Button>
+                    <Link href="/auth?mode=register">
+                      <Button
+                        component="span"
+                        variant={plan.isFeatured ? 'filled' : 'light'}
+                      >
+                        {plan.ctaText}
+                      </Button>
+                    </Link>
                   </Group>
                 </Stack>
               ))}

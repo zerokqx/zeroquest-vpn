@@ -66,7 +66,7 @@ export const theme = createTheme({
       name: 'appSurface',
     }),
   },
-  primaryColor: 'accent',
+  primaryColor: 'violet',
   primaryShade: { light: 6, dark: 5 },
   cursorType: 'pointer',
   defaultRadius: 'md',

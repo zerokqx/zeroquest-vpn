@@ -5,6 +5,7 @@ export {
   listAccessRecordsByUserId,
   listAccessRecordsWithStatusByUserId,
 } from './server/repository';
+export { deleteAccessForUser } from './server/delete-access';
 export { listAccessRecordsWithMonitoringByUserId } from './server/monitoring';
 export type {
   AccessRecord,

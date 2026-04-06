@@ -5,7 +5,6 @@ import {
   Button,
   Code,
   Container,
-  CopyButton,
   Group,
   Paper,
   SimpleGrid,
@@ -19,6 +18,8 @@ import { useState } from 'react';
 import { LogoutButton } from '@/features/auth/ui/logout-button';
 import type { AccessRecordWithStatus } from '@/entities/access/model/types';
 import type { User } from '@/entities/user/model/types';
+import { AccessQrButton } from '@/shared/ui/access-qr-button/access-qr-button';
+import { CopyAccessButton } from '@/widgets/dashboard/ui/copy-access-button';
 import styles from './profile-page.module.css';
 
 interface ProfilePageProps {
@@ -309,18 +310,10 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
                             <Text c="dimmed" size="sm">
                               Ссылка подключения
                             </Text>
-                            <CopyButton value={record.accessUri}>
-                              {({ copied, copy }) => (
-                                <Button
-                                  color="gray"
-                                  onClick={copy}
-                                  size="compact-sm"
-                                  variant="subtle"
-                                >
-                                  {copied ? 'Скопировано' : 'Копировать'}
-                                </Button>
-                              )}
-                            </CopyButton>
+                            <Group gap="xs">
+                              <AccessQrButton value={record.accessUri} />
+                              <CopyAccessButton value={record.accessUri} />
+                            </Group>
                           </Group>
 
                           <Textarea

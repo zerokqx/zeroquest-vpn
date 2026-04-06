@@ -1,0 +1,39 @@
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.stage::before,
+.stage::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.stage::before {
+  inset: -18%;
+  background:
+    radial-gradient(circle at 44% 46%, rgba(255, 197, 131, 0.16) 0%, rgba(255, 197, 131, 0) 26%),
+    radial-gradient(circle at 58% 48%, color-mix(in srgb, var(--accent) 34%, transparent) 0%, transparent 46%);
+  filter: blur(34px);
+  opacity: 0.92;
+}
+
+.stage::after {
+  inset: 18%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(7, 7, 11, 0.88) 0%, rgba(7, 7, 11, 0) 52%);
+  opacity: 0.82;
+}
+
+.canvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+}

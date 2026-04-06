@@ -1,9 +1,5 @@
-import {
-  deleteAccessRecordByIdForUser,
-  getAccessRecordByIdForUser,
-} from '@/entities/access';
+import { deleteAccessForUser } from '@/entities/access';
 import { requireCurrentUser } from '@/entities/user';
-import { deleteThreeXUiClient } from '@/shared/api/three-x-ui/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,22 +11,7 @@ export async function DELETE(
   try {
     const user = await requireCurrentUser();
     const { accessId } = await context.params;
-    const accessRecord = await getAccessRecordByIdForUser(accessId, user.id);
-
-    if (!accessRecord) {
-      return Response.json(
-        {
-          error: 'Подключение не найдено',
-        },
-        { status: 404 }
-      );
-    }
-
-    await deleteThreeXUiClient(
-      accessRecord.inboundId,
-      accessRecord.threeXUiClientId
-    );
-    await deleteAccessRecordByIdForUser(accessId, user.id);
+    await deleteAccessForUser(accessId, user.id);
 
     return Response.json({
       success: true,
@@ -42,6 +23,15 @@ export async function DELETE(
           error: 'Войдите в аккаунт',
         },
         { status: 401 }
+      );
+    }
+
+    if (error instanceof Error && error.message === 'Подключение не найдено') {
+      return Response.json(
+        {
+          error: error.message,
+        },
+        { status: 404 }
       );
     }
 

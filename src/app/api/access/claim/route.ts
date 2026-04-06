@@ -1,5 +1,6 @@
 import { requireCurrentUser } from '@/entities/user';
 import { claimPlan } from '@/features/claim-plan';
+import { claimPlanRequestSchema } from '@/features/claim-plan/model/schemas';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,24 +15,26 @@ export async function POST(request: Request): Promise<Response> {
       name?: string;
       promoCode?: string;
     };
-    const deviceName = body.deviceName ?? body.name;
+    const parsed = claimPlanRequestSchema.safeParse({
+      customTrafficGb: body.customTrafficGb,
+      deviceName: body.deviceName ?? body.name,
+      planId: body.planId,
+      promoCode: body.promoCode,
+    });
 
-    if (!body.planId || !deviceName) {
+    if (!parsed.success) {
       return Response.json(
         {
-          error: 'planId and deviceName are required',
+          error: parsed.error.issues[0]?.message || 'Некорректные данные',
         },
         { status: 400 }
       );
     }
 
-      const result = await claimPlan({
-        customTrafficGb: body.customTrafficGb,
-        planId: body.planId,
-        deviceName,
-        promoCode: body.promoCode,
-        user,
-      });
+    const result = await claimPlan({
+      ...parsed.data,
+      user,
+    });
 
     return Response.json(result);
   } catch (error) {

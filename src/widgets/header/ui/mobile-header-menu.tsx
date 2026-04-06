@@ -24,6 +24,7 @@ import {
   Shield,
   UserPlus,
 } from 'lucide-react';
+import Link from 'next/link';
 import { LogoutButton } from '@/features/auth/ui/logout-button';
 import { ColorSchemeToggle } from '@/features/theme/ui/color-scheme-toggle';
 import styles from './mobile-header-menu.module.css';
@@ -87,7 +88,7 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
 
           <Stack gap="xs">
             <NavLink
-              component="a"
+              component={Link}
               href="/"
               label="Главная"
               leftSection={<Home size={18} strokeWidth={1.9} />}
@@ -95,7 +96,7 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
             />
             {user ? (
               <NavLink
-                component="a"
+                component={Link}
                 href="/dashboard"
                 label="Dashboard"
                 leftSection={<LayoutDashboard size={18} strokeWidth={1.9} />}
@@ -104,7 +105,7 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
             ) : null}
             {user?.role === 'admin' ? (
               <NavLink
-                component="a"
+                component={Link}
                 href="/admin"
                 label="Admin"
                 leftSection={<Shield size={18} strokeWidth={1.9} />}
@@ -132,7 +133,7 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
           ) : (
             <Group grow>
               <Button
-                component="a"
+                component={Link}
                 href="/auth"
                 leftSection={<LogIn size={16} strokeWidth={1.9} />}
                 onClick={close}
@@ -141,7 +142,7 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
                 Войти
               </Button>
               <Button
-                component="a"
+                component={Link}
                 href="/auth?mode=register"
                 leftSection={<UserPlus size={16} strokeWidth={1.9} />}
                 onClick={close}

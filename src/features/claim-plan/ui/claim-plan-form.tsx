@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   Code,
-  CopyButton,
   Group,
   List,
   Paper,
@@ -22,6 +21,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 import type { PublicPlan } from '@/entities/plan/model/types';
 import type { User } from '@/entities/user/model/types';
+import { AccessQrButton } from '@/shared/ui/access-qr-button/access-qr-button';
+import { CopyAccessButton } from '@/widgets/dashboard/ui/copy-access-button';
 import { claimPlanRequest } from '../api/claim-plan';
 import type { ClaimPlanResponse } from '../model/types';
 import styles from './claim-plan-form.module.css';
@@ -227,18 +228,19 @@ export function ClaimPlanForm({ plan, viewer }: ClaimPlanFormProps) {
                   </Button>
 
                   {result ? (
-                    <CopyButton value={result.access.uri}>
-                      {({ copied, copy }) => (
-                        <Button
-                          color="gray"
-                          onClick={copy}
-                          size="md"
-                          variant="subtle"
-                        >
-                          {copied ? 'Скопировано' : 'Копировать ссылку'}
-                        </Button>
-                      )}
-                    </CopyButton>
+                    <AccessQrButton
+                      buttonLabel="Показать QR"
+                      size="md"
+                      value={result.access.uri}
+                    />
+                  ) : null}
+
+                  {result ? (
+                    <CopyAccessButton
+                      label="Копировать ссылку"
+                      size="md"
+                      value={result.access.uri}
+                    />
                   ) : null}
                 </Group>
               </Stack>

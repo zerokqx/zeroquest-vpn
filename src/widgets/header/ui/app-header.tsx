@@ -1,30 +1,46 @@
 import {
-  Avatar,
   Button,
   Container,
   Group,
-  Stack,
   Text,
 } from "@mantine/core";
 import Link from "next/link";
-import { getCurrentUser } from "@/entities/user";
-import { LogoutButton } from "@/features/auth/ui/logout-button";
+import { Suspense } from "react";
 import { ColorSchemeToggle } from "@/features/theme/ui/color-scheme-toggle";
 import { MobileHeaderMenu } from "./mobile-header-menu";
+import { HeaderAuthSection } from "./header-auth-section";
 import styles from "./app-header.module.css";
 
-const toInitials = (login: string): string =>
-  login
-    .split(/[\W_]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("")
-    .slice(0, 2) || login.slice(0, 2).toUpperCase();
+function HeaderActionsFallback() {
+  return (
+    <>
+      <Group
+        className={styles.actions}
+        gap="sm"
+        visibleFrom="md"
+        wrap="nowrap"
+      >
+        <ColorSchemeToggle />
+        <Group gap="sm">
+          <Link href="/auth">
+            <Button component="span" variant="light">
+              Войти
+            </Button>
+          </Link>
+          <Link href="/auth?mode=register">
+            <Button component="span">Регистрация</Button>
+          </Link>
+        </Group>
+      </Group>
 
-export async function AppHeader() {
-  const user = await getCurrentUser();
+      <Group className={styles.mobileOnly} hiddenFrom="md">
+        <MobileHeaderMenu user={null} />
+      </Group>
+    </>
+  );
+}
 
+export function AppHeader() {
   return (
     <header className={styles.wrap}>
       <Container size="xl">
@@ -55,61 +71,13 @@ export async function AppHeader() {
                 <Link className={styles.navLink} href="/">
                   Главная
                 </Link>
-                {user ? (
-                  <Link className={styles.navLink} href="/dashboard">
-                    Dashboard
-                  </Link>
-                ) : null}
-                {user?.role === "admin" ? (
-                  <Link className={styles.navLink} href="/admin">
-                    Admin
-                  </Link>
-                ) : null}
               </Group>
             </nav>
           </Group>
 
-          <Group
-            className={styles.actions}
-            gap="sm"
-            visibleFrom="md"
-            wrap="nowrap"
-          >
-            <ColorSchemeToggle />
-            {user ? (
-              <Group gap="sm" wrap="nowrap">
-                <Group className={styles.identity} gap="sm" wrap="nowrap">
-                  <Avatar color="accent" radius="xl" size={38}>
-                    {toInitials(user.login)}
-                  </Avatar>
-                  <Stack gap={1}>
-                    <span className={styles.identityName}>{user.login}</span>
-                    <span className={styles.identityCopy}>
-                      {user.role === "admin"
-                        ? "Администратор"
-                        : "Аккаунт активен"}
-                    </span>
-                  </Stack>
-                </Group>
-                <LogoutButton />
-              </Group>
-            ) : (
-              <Group gap="sm">
-                <Button component="a" href="/auth" variant="light">
-                  Войти
-                </Button>
-                <Button component="a" href="/auth?mode=register">
-                  Регистрация
-                </Button>
-              </Group>
-            )}
-          </Group>
-
-          <Group className={styles.mobileOnly} hiddenFrom="md">
-            <MobileHeaderMenu
-              user={user ? { login: user.login, role: user.role } : null}
-            />
-          </Group>
+          <Suspense fallback={<HeaderActionsFallback />}>
+            <HeaderAuthSection />
+          </Suspense>
         </Group>
       </Container>
     </header>

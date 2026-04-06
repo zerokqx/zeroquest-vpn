@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { cache } from 'react';
 import { decryptJson, encryptJson, getPrismaClient } from '@/shared/db/server';
 import type { Plan, PublicPlan, UpsertPlanInput } from '../model/types';
 
@@ -95,7 +96,7 @@ export const listPlans = async (): Promise<Plan[]> =>
     ],
   })).map(toPlan);
 
-export const listPublicPlans = async (): Promise<PublicPlan[]> =>
+export const listPublicPlans = cache(async (): Promise<PublicPlan[]> =>
   (await getPrismaClient().planStore.findMany({
     where: {
       isActive: true,
@@ -104,9 +105,12 @@ export const listPublicPlans = async (): Promise<PublicPlan[]> =>
       { sortOrder: 'asc' },
       { createdAt: 'asc' },
     ],
-  })).map(toPlan).map(toPublicPlan);
+  }))
+    .map(toPlan)
+    .map(toPublicPlan)
+);
 
-export const getPlanById = async (planId: string): Promise<Plan | null> => {
+export const getPlanById = cache(async (planId: string): Promise<Plan | null> => {
   const row = await getPrismaClient().planStore.findUnique({
     where: {
       id: planId,
@@ -114,7 +118,7 @@ export const getPlanById = async (planId: string): Promise<Plan | null> => {
   });
 
   return row ? toPlan(row) : null;
-};
+});
 
 export const createPlan = async (input: UpsertPlanInput): Promise<Plan> => {
   const prisma = getPrismaClient();
