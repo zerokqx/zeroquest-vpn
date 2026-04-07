@@ -15,21 +15,69 @@ model UserStore {
   payload     String              @db.Text
   createdAt   DateTime            @default(now()) @map("created_at")
   updatedAt   DateTime            @default(now()) @map("updated_at")
-  accesses    AccessRecordStore[]
+  payments    PaymentStore[]
+  refundRequests RefundRequestStore[] @relation("RefundRequestRequester")
+  reviewedRefundRequests RefundRequestStore[] @relation("RefundRequestReviewer")
+  vpnKeys     VpnKeyStore[]
 
   @@map("users")
 }
 
 model PlanStore {
-  id        String   @id
-  slug      String   @unique
-  isActive  Boolean  @map("is_active")
-  sortOrder Int      @map("sort_order")
-  payload   String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  id                  String            @id
+  slug                String            @unique
+  title               String
+  description         String
+  priceRub            Int               @map("price_rub")
+  currency            String
+  features            String[]
+  trafficLimitBytes   BigInt?           @map("traffic_limit_bytes")
+  durationDays        Int               @map("duration_days")
+  speedLimitMbps      Int?              @map("speed_limit_mbps")
+  allowsCustomTraffic Boolean           @default(false) @map("allows_custom_traffic")
+  isActive            Boolean           @map("is_active")
+  isFeatured          Boolean           @default(false) @map("is_featured")
+  badge               String?
+  ctaText             String            @map("cta_text")
+  customPricePerGbRub Int?              @map("custom_price_per_gb_rub")
+  customTrafficMaxGb  Int?              @map("custom_traffic_max_gb")
+  customTrafficMinGb  Int?              @map("custom_traffic_min_gb")
+  highlight           String?
+  sortOrder           Int               @map("sort_order")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @default(now()) @map("updated_at")
+  payments            PaymentStore[]
+  planInbounds        PlanInboundStore[]
+  vpnKeys             VpnKeyStore[]
 
   @@map("plans")
+}
+
+model InboundStore {
+  id         Int               @id
+  name       String
+  value      String
+  type       String
+  isActive   Boolean           @default(true) @map("is_active")
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @default(now()) @map("updated_at")
+  planLinks  PlanInboundStore[]
+  vpnKeys    VpnKeyStore[]
+
+  @@map("inbounds")
+}
+
+model PlanInboundStore {
+  planId    String    @map("plan_id")
+  inboundId Int       @map("inbound_id")
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+  plan      PlanStore @relation(fields: [planId], references: [id], onDelete: Cascade)
+  inbound   InboundStore @relation(fields: [inboundId], references: [id], onDelete: Restrict)
+
+  @@id([planId, inboundId])
+  @@index([inboundId])
+  @@map("plan_inbounds")
 }
 
 model PromoCodeStore {
@@ -42,15 +90,80 @@ model PromoCodeStore {
   @@map("promo_codes")
 }
 
-model AccessRecordStore {
-  id        String    @id
-  userId    String    @map("user_id")
-  planId    String    @map("plan_id")
-  payload   String    @db.Text
-  createdAt DateTime  @default(now()) @map("created_at")
-  expiresAt DateTime  @map("expires_at")
-  user      UserStore @relation(fields: [userId], references: [id], onDelete: Cascade)
+model PaymentStore {
+  id                String      @id
+  userId            String      @map("user_id")
+  planId            String      @map("plan_id")
+  provider          String
+  providerPaymentId String?     @unique @map("provider_payment_id")
+  status            String
+  fulfillmentStatus String      @default("pending") @map("fulfillment_status")
+  amount            Int
+  currency          String
+  payload           String      @db.Text
+  paidAt            DateTime?   @map("paid_at")
+  fulfilledAt       DateTime?   @map("fulfilled_at")
+  lastCheckedAt     DateTime?   @map("last_checked_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @default(now()) @map("updated_at")
+  user              UserStore   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan              PlanStore   @relation(fields: [planId], references: [id], onDelete: Restrict)
+  refundRequest     RefundRequestStore?
+  vpnKey            VpnKeyStore? @relation("PaymentVpnKey")
 
   @@index([userId, createdAt])
-  @@map("access_records")
+  @@index([userId, providerPaymentId])
+  @@index([status, fulfillmentStatus])
+  @@map("payments")
+}
+
+model VpnKeyStore {
+  id                String       @id
+  userId            String       @map("user_id")
+  planId            String       @map("plan_id")
+  paymentId         String       @unique @map("payment_id")
+  inboundId         Int          @map("inbound_id")
+  keyValue          String       @map("key_value") @db.Text
+  trafficLimitBytes BigInt?      @map("traffic_limit_bytes")
+  payload           String       @db.Text
+  expiresAt         DateTime     @map("expires_at")
+  issuedAt          DateTime     @map("issued_at")
+  revokedAt         DateTime?    @map("revoked_at")
+  user              UserStore    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan              PlanStore    @relation(fields: [planId], references: [id], onDelete: Restrict)
+  payment           PaymentStore @relation("PaymentVpnKey", fields: [paymentId], references: [id], onDelete: Restrict)
+  inbound           InboundStore @relation(fields: [inboundId], references: [id], onDelete: Restrict)
+  refundRequest     RefundRequestStore?
+
+  @@index([userId, issuedAt])
+  @@index([planId])
+  @@index([revokedAt])
+  @@map("vpn_keys")
+}
+
+model RefundRequestStore {
+  id               String       @id
+  userId           String       @map("user_id")
+  paymentId        String       @unique @map("payment_id")
+  vpnKeyId         String       @unique @map("vpn_key_id")
+  reviewedByUserId String?      @map("reviewed_by_user_id")
+  provider         String
+  providerRefundId String?      @unique @map("provider_refund_id")
+  status           String
+  amount           Int
+  currency         String
+  payload          String       @db.Text
+  requestedAt      DateTime     @default(now()) @map("requested_at")
+  reviewedAt       DateTime?    @map("reviewed_at")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @default(now()) @map("updated_at")
+  user             UserStore    @relation("RefundRequestRequester", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedByUser   UserStore?   @relation("RefundRequestReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+  payment          PaymentStore @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  vpnKey           VpnKeyStore  @relation(fields: [vpnKeyId], references: [id], onDelete: Restrict)
+
+  @@index([userId, requestedAt])
+  @@index([status, requestedAt])
+  @@index([reviewedByUserId])
+  @@map("refund_requests")
 }

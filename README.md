@@ -40,13 +40,13 @@ cp .env.example .env.local
 3. Start PostgreSQL and initialize the database.
 
 ```bash
-npm run db:setup
+bun db:setup
 ```
 
 4. Start development server.
 
 ```bash
-npm run dev
+bun dev
 ```
 
 Open `http://localhost:3000`.
@@ -58,29 +58,34 @@ The main variables are listed in `.env.example`.
 - auth: `AUTH_COOKIE_NAME`, `AUTH_JWT_SECRET`, `AUTH_JWT_EXPIRES_IN`
 - database: `DATABASE_URL`, `APP_DATA_ENCRYPTION_KEY`
 - bootstrap admin: `ADMIN_DEFAULT_LOGIN`
-- `3x-ui`: host, credentials, web base path, inbound ids, plan defaults
+- `3x-ui`: host, credentials, web base path
+- YooKassa: `YOOKASSA_TOKEN`, `YOOKASSA_SHOP_ID`, `YOOKASSA_REDIRECT_TO`
 
 Replace all example secrets before any real deployment.
 
 ## Scripts
 
-- `npm run dev` starts Next.js in development mode
-- `npm run build` builds production assets
-- `npm run start` starts the production server
-- `npm run lint` runs ESLint
-- `npm run test` runs Vitest
-- `npm run db:generate` generates Prisma client artifacts
-- `npm run db:push` initializes schema via the project scripts
-- `npm run db:seed` seeds demo data
-- `npm run db:setup` starts PostgreSQL, initializes schema and seeds data
-- `npm run docker:up` starts the app and database in Docker
+- `bun dev` starts Next.js in development mode
+- `bun build` builds production assets
+- `bun start` starts the production server
+- `bun lint` runs ESLint
+- `bun test` runs Vitest
+- `bun db:generate` generates Prisma client artifacts
+- `bun db:push` initializes schema via the project scripts
+- `bun db:seed` seeds demo data
+- `bun db:setup` starts PostgreSQL, initializes schema and seeds data
+- `bun docker:db` starts only PostgreSQL in Docker
+- `bun docker:site` rebuilds the app image without Docker cache and starts only the site container
+- `bun docker:up` starts database first, then rebuilds and starts the site
 
 ## API Surface
 
 Core endpoints:
 
 - `GET /api/plans`
-- `POST /api/access/claim`
+- `POST /api/payments`
+- `GET /api/payments/:paymentId`
+- `POST /api/access/claim` returns `410 Gone` and is left only as a guardrail
 - `DELETE /api/access/:accessId`
 - `POST /api/auth/login`
 - `POST /api/auth/register`
@@ -95,9 +100,9 @@ Example:
 ```bash
 curl http://localhost:3000/api/plans
 
-curl -X POST http://localhost:3000/api/access/claim \
+curl -X POST http://localhost:3000/api/payments \
   -H 'Content-Type: application/json' \
-  -d '{"planId":"free-10gb-month","deviceName":"Murad iPhone"}'
+  -d '{"planId":"extended-unlimited-month","deviceName":"Murad iPhone"}'
 ```
 
 ## Notes

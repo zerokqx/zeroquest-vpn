@@ -1,12 +1,17 @@
 import { listPublicPlans } from '@/entities/plan';
+import { withRouteLogging } from '@/shared/logging/server/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET(): Promise<Response> {
-  const plans = await listPublicPlans();
+export const GET = withRouteLogging(
+  'api.plans.get',
+  async (request: Request): Promise<Response> => {
+    void request;
+    const plans = await listPublicPlans();
 
-  return Response.json({
-    plans,
-  });
-}
+    return Response.json({
+      plans,
+    });
+  }
+);

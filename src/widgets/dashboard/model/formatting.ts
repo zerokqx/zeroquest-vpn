@@ -1,4 +1,5 @@
 import type { PublicPlan } from '@/entities/plan/model/types';
+import { formatMoney } from '@/shared/lib/currency';
 
 const utcDateTimeFormatter = new Intl.DateTimeFormat('ru-RU', {
   day: '2-digit',
@@ -34,10 +35,12 @@ export const formatBytes = (value: number | null): string => {
 
 export const formatPlanPrice = (plan: PublicPlan): string => {
   if (plan.allowsCustomTraffic) {
-    return `от ${plan.priceRub} ₽`;
+    return `от ${formatMoney(plan.priceRub, plan.currency)}`;
   }
 
-  return plan.priceRub === 0 ? '0 ₽' : `${plan.priceRub} ₽`;
+  return plan.priceRub === 0
+    ? formatMoney(0, plan.currency)
+    : formatMoney(plan.priceRub, plan.currency);
 };
 
 export const formatUtcDate = (value: string): string =>

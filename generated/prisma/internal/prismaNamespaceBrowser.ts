@@ -53,8 +53,12 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   UserStore: 'UserStore',
   PlanStore: 'PlanStore',
+  InboundStore: 'InboundStore',
+  PlanInboundStore: 'PlanInboundStore',
   PromoCodeStore: 'PromoCodeStore',
-  AccessRecordStore: 'AccessRecordStore'
+  PaymentStore: 'PaymentStore',
+  VpnKeyStore: 'VpnKeyStore',
+  RefundRequestStore: 'RefundRequestStore'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -88,14 +92,52 @@ export type UserStoreScalarFieldEnum = (typeof UserStoreScalarFieldEnum)[keyof t
 export const PlanStoreScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  title: 'title',
+  description: 'description',
+  priceRub: 'priceRub',
+  currency: 'currency',
+  features: 'features',
+  trafficLimitBytes: 'trafficLimitBytes',
+  durationDays: 'durationDays',
+  speedLimitMbps: 'speedLimitMbps',
+  allowsCustomTraffic: 'allowsCustomTraffic',
   isActive: 'isActive',
+  isFeatured: 'isFeatured',
+  badge: 'badge',
+  ctaText: 'ctaText',
+  customPricePerGbRub: 'customPricePerGbRub',
+  customTrafficMaxGb: 'customTrafficMaxGb',
+  customTrafficMinGb: 'customTrafficMinGb',
+  highlight: 'highlight',
   sortOrder: 'sortOrder',
-  payload: 'payload',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PlanStoreScalarFieldEnum = (typeof PlanStoreScalarFieldEnum)[keyof typeof PlanStoreScalarFieldEnum]
+
+
+export const InboundStoreScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InboundStoreScalarFieldEnum = (typeof InboundStoreScalarFieldEnum)[keyof typeof InboundStoreScalarFieldEnum]
+
+
+export const PlanInboundStoreScalarFieldEnum = {
+  planId: 'planId',
+  inboundId: 'inboundId',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type PlanInboundStoreScalarFieldEnum = (typeof PlanInboundStoreScalarFieldEnum)[keyof typeof PlanInboundStoreScalarFieldEnum]
 
 
 export const PromoCodeStoreScalarFieldEnum = {
@@ -109,16 +151,63 @@ export const PromoCodeStoreScalarFieldEnum = {
 export type PromoCodeStoreScalarFieldEnum = (typeof PromoCodeStoreScalarFieldEnum)[keyof typeof PromoCodeStoreScalarFieldEnum]
 
 
-export const AccessRecordStoreScalarFieldEnum = {
+export const PaymentStoreScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   planId: 'planId',
+  provider: 'provider',
+  providerPaymentId: 'providerPaymentId',
+  status: 'status',
+  fulfillmentStatus: 'fulfillmentStatus',
+  amount: 'amount',
+  currency: 'currency',
   payload: 'payload',
+  paidAt: 'paidAt',
+  fulfilledAt: 'fulfilledAt',
+  lastCheckedAt: 'lastCheckedAt',
   createdAt: 'createdAt',
-  expiresAt: 'expiresAt'
+  updatedAt: 'updatedAt'
 } as const
 
-export type AccessRecordStoreScalarFieldEnum = (typeof AccessRecordStoreScalarFieldEnum)[keyof typeof AccessRecordStoreScalarFieldEnum]
+export type PaymentStoreScalarFieldEnum = (typeof PaymentStoreScalarFieldEnum)[keyof typeof PaymentStoreScalarFieldEnum]
+
+
+export const VpnKeyStoreScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  paymentId: 'paymentId',
+  inboundId: 'inboundId',
+  keyValue: 'keyValue',
+  trafficLimitBytes: 'trafficLimitBytes',
+  payload: 'payload',
+  expiresAt: 'expiresAt',
+  issuedAt: 'issuedAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type VpnKeyStoreScalarFieldEnum = (typeof VpnKeyStoreScalarFieldEnum)[keyof typeof VpnKeyStoreScalarFieldEnum]
+
+
+export const RefundRequestStoreScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  paymentId: 'paymentId',
+  vpnKeyId: 'vpnKeyId',
+  reviewedByUserId: 'reviewedByUserId',
+  provider: 'provider',
+  providerRefundId: 'providerRefundId',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  payload: 'payload',
+  requestedAt: 'requestedAt',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefundRequestStoreScalarFieldEnum = (typeof RefundRequestStoreScalarFieldEnum)[keyof typeof RefundRequestStoreScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -135,4 +224,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

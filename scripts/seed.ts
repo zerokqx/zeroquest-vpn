@@ -3,12 +3,10 @@ import { loadEnvConfig } from '@next/env';
 
 loadEnvConfig(process.cwd());
 
-const [{ PrismaClient }, { dataSecurityConfig, threeXUiConfig }, { encryptJson }] =
-  await Promise.all([
-    import('../generated/prisma/client'),
-    import('../src/shared/config/env.server'),
-    import('../src/shared/db/server/crypto'),
-  ]);
+const [{ PrismaClient }, { dataSecurityConfig }] = await Promise.all([
+  import('../generated/prisma/client'),
+  import('../src/shared/config/env.server'),
+]);
 
 const adapter = new PrismaPg({
   connectionString: dataSecurityConfig.databaseUrl,
@@ -19,91 +17,143 @@ const prisma = new PrismaClient({
 
 const BYTES_IN_GIGABYTE = 1024 ** 3;
 
+const defaultInbounds = [
+  {
+    id: 1,
+    isActive: true,
+    name: 'ZeroQuest Private',
+    type: '3x-ui',
+    value: '1',
+  },
+  {
+    id: 2,
+    isActive: true,
+    name: 'ZeroQuest Standard',
+    type: '3x-ui',
+    value: '2',
+  },
+  {
+    id: 5,
+    isActive: true,
+    name: 'ZeroQuest Custom',
+    type: '3x-ui',
+    value: '5',
+  },
+];
+
 const defaultPlans = [
   {
-    id: 'free-10gb-month',
+    allowsCustomTraffic: false,
+    badge: 'Старт',
+    ctaText: 'Оплатить стартовый',
+    currency: 'RUB',
+    customPricePerGbRub: null,
+    customTrafficMaxGb: null,
+    customTrafficMinGb: null,
+    description: 'Базовый тариф для одного устройства без бесплатной раздачи.',
+    durationDays: 30,
+    features: [
+      '30 GB трафика',
+      'один приватный профиль',
+      'ключ появляется после подтверждения оплаты',
+    ],
+    highlight: 'Платный старт без демо-режима',
+    id: 'starter-30gb-month',
+    inboundId: 2,
+    isActive: true,
+    isFeatured: false,
+    priceRub: 149,
+    slug: 'starter',
     sortOrder: 0,
-    slug: 'free',
-    payload: {
-      badge: 'Старт',
-      ctaText: 'Получить бесплатно',
-      description: 'Быстрый пробный доступ для знакомства с сервисом.',
-      durationDays: threeXUiConfig.freePlanDurationDays,
-      features: [
-        `${threeXUiConfig.freePlanTrafficGb} GB трафика`,
-        'общий защищённый профиль',
-        'подключение за пару минут',
-      ],
-      highlight: 'Без оплаты',
-      inboundId: threeXUiConfig.freePlanInboundId,
-      isFeatured: false,
-      priceRub: 0,
-      slug: 'free',
-      speedLimitMbps: null,
-      title: 'Free',
-      trafficLimitBytes:
-        threeXUiConfig.freePlanTrafficGb * BYTES_IN_GIGABYTE,
-    },
+    speedLimitMbps: null,
+    title: 'Старт',
+    trafficLimitBytes: 30 * BYTES_IN_GIGABYTE,
   },
   {
+    allowsCustomTraffic: false,
+    badge: 'Лучший выбор',
+    ctaText: 'Оплатить расширенный',
+    currency: 'RUB',
+    customPricePerGbRub: null,
+    customTrafficMaxGb: null,
+    customTrafficMinGb: null,
+    description:
+      'Приватный профиль с безлимитным трафиком и предсказуемой скоростью.',
+    durationDays: 30,
+    features: [
+      'безлимитный трафик',
+      'скорость до 40 Мбит/с',
+      'приватный маршрут ZeroQuest Private',
+    ],
+    highlight: 'Приватный канал',
     id: 'extended-unlimited-month',
-    sortOrder: 1,
+    inboundId: 1,
+    isActive: true,
+    isFeatured: true,
+    priceRub: 250,
     slug: 'extended',
-    payload: {
-      badge: 'Лучший выбор',
-      ctaText: 'Подключить расширенный',
-      description:
-        'Приватный профиль с безлимитным трафиком и комфортной скоростью.',
-      durationDays: threeXUiConfig.extendedPlanDurationDays,
-      features: [
-        'безлимитный трафик',
-        `скорость до ${threeXUiConfig.extendedPlanSpeedMbps} Мбит/с`,
-        'приватный маршрут ZeroQuest Приватный',
-      ],
-      highlight: 'Приватный канал',
-      inboundId: threeXUiConfig.extendedPlanInboundId,
-      isFeatured: true,
-      priceRub: threeXUiConfig.extendedPlanPriceRub,
-      slug: 'extended',
-      speedLimitMbps: threeXUiConfig.extendedPlanSpeedMbps,
-      title: 'Расширенный',
-      trafficLimitBytes: null,
-    },
+    sortOrder: 1,
+    speedLimitMbps: 40,
+    title: 'Расширенный',
+    trafficLimitBytes: null,
   },
   {
+    allowsCustomTraffic: true,
+    badge: 'Гибкий',
+    ctaText: 'Собрать свой объём',
+    currency: 'RUB',
+    customPricePerGbRub: 15,
+    customTrafficMaxGb: 200,
+    customTrafficMinGb: 10,
+    description: 'Конфигурация с оплатой только за нужный вам объём трафика.',
+    durationDays: 30,
+    features: [
+      'от 10 до 200 GB',
+      '15 ₽ за 1 GB',
+      'приватный маршрут ZeroQuest Custom',
+    ],
+    highlight: 'Гигабайты под себя',
     id: 'full-custom',
-    sortOrder: 2,
+    inboundId: 5,
+    isActive: true,
+    isFeatured: false,
+    priceRub: 150,
     slug: 'full-custom',
-    payload: {
-      allowsCustomTraffic: true,
-      badge: 'Гибкий',
-      ctaText: 'Собрать свой объём',
-      customPricePerGbRub: threeXUiConfig.customPlanPricePerGbRub,
-      customTrafficMaxGb: threeXUiConfig.customPlanMaxTrafficGb,
-      customTrafficMinGb: threeXUiConfig.customPlanMinTrafficGb,
-      description: 'Конфигурация с выбором объёма трафика под ваше устройство.',
-      durationDays: 30,
-      features: [
-        `от ${threeXUiConfig.customPlanMinTrafficGb} до ${threeXUiConfig.customPlanMaxTrafficGb} GB`,
-        `${threeXUiConfig.customPlanPricePerGbRub} ₽ за 1 GB`,
-        'приватный inbound Полный Кастом',
-      ],
-      highlight: 'Гигабайты под себя',
-      inboundId: threeXUiConfig.customPlanInboundId,
-      isFeatured: false,
-      priceRub:
-        threeXUiConfig.customPlanMinTrafficGb *
-        threeXUiConfig.customPlanPricePerGbRub,
-      slug: 'full-custom',
-      speedLimitMbps: null,
-      title: 'Полный кастом',
-      trafficLimitBytes:
-        threeXUiConfig.customPlanMinTrafficGb * BYTES_IN_GIGABYTE,
-    },
+    sortOrder: 2,
+    speedLimitMbps: null,
+    title: 'Полный кастом',
+    trafficLimitBytes: 10 * BYTES_IN_GIGABYTE,
   },
 ];
 
 try {
+  for (const inbound of defaultInbounds) {
+    const existingInbound = await prisma.inboundStore.findUnique({
+      where: {
+        id: inbound.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingInbound) {
+      const now = new Date();
+
+      await prisma.inboundStore.create({
+        data: {
+          createdAt: now,
+          id: inbound.id,
+          isActive: inbound.isActive,
+          name: inbound.name,
+          type: inbound.type,
+          updatedAt: now,
+          value: inbound.value,
+        },
+      });
+    }
+  }
+
   for (const plan of defaultPlans) {
     const existingPlan = await prisma.planStore.findUnique({
       where: {
@@ -119,12 +169,37 @@ try {
 
       await prisma.planStore.create({
         data: {
+          allowsCustomTraffic: plan.allowsCustomTraffic,
+          badge: plan.badge,
           createdAt: now,
+          ctaText: plan.ctaText,
+          currency: plan.currency,
+          customPricePerGbRub: plan.customPricePerGbRub,
+          customTrafficMaxGb: plan.customTrafficMaxGb,
+          customTrafficMinGb: plan.customTrafficMinGb,
+          description: plan.description,
+          durationDays: plan.durationDays,
+          features: plan.features,
           id: plan.id,
-          isActive: true,
-          payload: encryptJson(plan.payload),
+          isActive: plan.isActive,
+          isFeatured: plan.isFeatured,
+          highlight: plan.highlight,
+          planInbounds: {
+            create: {
+              createdAt: now,
+              inboundId: plan.inboundId,
+              sortOrder: 0,
+            },
+          },
+          priceRub: plan.priceRub,
           slug: plan.slug,
           sortOrder: plan.sortOrder,
+          speedLimitMbps: plan.speedLimitMbps,
+          title: plan.title,
+          trafficLimitBytes:
+            plan.trafficLimitBytes === null
+              ? null
+              : BigInt(plan.trafficLimitBytes),
           updatedAt: now,
         },
       });

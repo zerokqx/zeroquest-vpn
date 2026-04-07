@@ -20,8 +20,10 @@ import {
   LogIn,
   LogOut,
   PanelTopOpen,
+  RotateCcw,
   Settings,
   Shield,
+  Smartphone,
   UserPlus,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -52,9 +54,10 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
     <>
       <Burger
         aria-label={opened ? 'Закрыть меню' : 'Открыть меню'}
+        className={styles.burgerButton}
         onClick={toggle}
         opened={opened}
-        size="sm"
+        size="md"
       />
 
       <Drawer
@@ -94,6 +97,13 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
               leftSection={<Home size={18} strokeWidth={1.9} />}
               onClick={close}
             />
+            <NavLink
+              component={Link}
+              href="/instructions"
+              label="Инструкция"
+              leftSection={<Smartphone size={18} strokeWidth={1.9} />}
+              onClick={close}
+            />
             {user ? (
               <NavLink
                 component={Link}
@@ -104,13 +114,22 @@ export function MobileHeaderMenu({ user }: MobileHeaderMenuProps) {
               />
             ) : null}
             {user?.role === 'admin' ? (
-              <NavLink
-                component={Link}
-                href="/admin"
-                label="Admin"
-                leftSection={<Shield size={18} strokeWidth={1.9} />}
-                onClick={close}
-              />
+              <>
+                <NavLink
+                  component={Link}
+                  href="/admin"
+                  label="Admin"
+                  leftSection={<Shield size={18} strokeWidth={1.9} />}
+                  onClick={close}
+                />
+                <NavLink
+                  component={Link}
+                  href="/admin/refunds"
+                  label="Refunds"
+                  leftSection={<RotateCcw size={18} strokeWidth={1.9} />}
+                  onClick={close}
+                />
+              </>
             ) : null}
           </Stack>
 

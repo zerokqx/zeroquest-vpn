@@ -1,7 +1,26 @@
+export interface VpnKeyRecord {
+  id: string;
+  userId: string;
+  planId: string;
+  paymentId: string;
+  deviceName: string;
+  displayName: string;
+  threeXUiClientId: string;
+  threeXUiEmail: string;
+  inboundId: number;
+  inboundRemark: string;
+  keyValue: string;
+  issuedAt: string;
+  expiresAt: string;
+  revokedAt: string | null;
+  trafficLimitBytes: number | null;
+}
+
 export interface AccessRecord {
   id: string;
   userId: string;
   planId: string;
+  paymentId: string;
   planTitle: string;
   originalPriceRub: number;
   finalPriceRub: number;

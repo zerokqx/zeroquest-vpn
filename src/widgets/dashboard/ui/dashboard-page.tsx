@@ -10,14 +10,16 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  Textarea,
   Title,
 } from '@mantine/core';
 import Link from 'next/link';
 import type { AccessRecordWithMonitoring } from '@/entities/access/model/types';
 import type { PublicPlan } from '@/entities/plan/model/types';
+import type { RefundRequest } from '@/entities/refund-request';
 import type { User } from '@/entities/user/model/types';
+import { PaymentStatusPanel } from '@/features/payments/ui/payment-status-panel';
 import { AccessQrButton } from '@/shared/ui/access-qr-button/access-qr-button';
+import { formatMoney } from '@/shared/lib/currency';
 import {
   formatBytes,
   formatLastOnline,
@@ -29,20 +31,44 @@ import { buildDashboardSummary } from '../model/summary';
 import { ClaimPlanControl } from './claim-plan-control';
 import { CopyAccessButton } from './copy-access-button';
 import { DeleteAccessButton } from './delete-access-button';
+import { RequestRefundButton } from './request-refund-button';
+import { VlessLink } from '@/shared/ui/vless-link/vless-link';
+import { getVisibleDeviceName } from '@/shared/lib/display-name';
 import styles from './dashboard-page.module.css';
 
 interface DashboardPageProps {
   accessRecords: AccessRecordWithMonitoring[];
   plans: PublicPlan[];
+  refundRequests: RefundRequest[];
   user: User;
 }
+
+const refundStatusBadgeColor: Record<RefundRequest['status'], string> = {
+  failed: 'red',
+  rejected: 'gray',
+  refund_pending: 'yellow',
+  refunded: 'green',
+  requested: 'blue',
+};
+
+const refundStatusLabel: Record<RefundRequest['status'], string> = {
+  failed: 'Ошибка возврата',
+  rejected: 'Отклонён',
+  refund_pending: 'В обработке',
+  refunded: 'Возвращено',
+  requested: 'Запрошен',
+};
 
 export function DashboardPage({
   accessRecords,
   plans,
+  refundRequests,
   user,
 }: DashboardPageProps) {
   const summary = buildDashboardSummary(accessRecords);
+  const refundRequestsByAccessId = new Map(
+    refundRequests.map((refundRequest) => [refundRequest.vpnKeyId, refundRequest])
+  );
 
   return (
     <main className={styles.page}>
@@ -58,7 +84,7 @@ export function DashboardPage({
                 <Text className={styles.heroCopy} size="lg">
                   Здесь видно, сколько трафика уже потрачено, какой доступ истекает
                   первым и какой конфиг можно заново скопировать без повторной
-                  выдачи.
+                  выдачи. Новые ключи появляются только после подтвержденной оплаты.
                 </Text>
               </Stack>
 
@@ -103,6 +129,10 @@ export function DashboardPage({
           <Grid align="start" gap="xl">
             <GridCol span={{ base: 12, lg: 8 }}>
               <section className={styles.devicesSection}>
+                <Stack gap="lg" mb="xl">
+                  <PaymentStatusPanel />
+                </Stack>
+
                 <Group align="flex-start" justify="space-between" wrap="wrap">
                   <Stack gap="xs">
                     <Text className={styles.eyebrow}>Устройства</Text>
@@ -119,13 +149,14 @@ export function DashboardPage({
                   <Stack className={styles.emptyState} component="article" gap="sm" mt="xl">
                     <Title order={3}>Устройств пока нет</Title>
                     <Text className={styles.muted}>
-                      Нажмите «Добавить устройство», выберите тариф и задайте имя
-                      девайса. Новый доступ сразу появится в списке.
+                      Выберите тариф, задайте имя девайса и оплатите его. После
+                      подтверждения платежа ключ автоматически появится в списке.
                     </Text>
                   </Stack>
                 ) : (
                   <Stack gap="md" mt="xl">
                     {accessRecords.map((record) => {
+                      const refundRequest = refundRequestsByAccessId.get(record.id) ?? null;
                       const primaryMetrics = [
                         {
                           caption:
@@ -200,12 +231,20 @@ export function DashboardPage({
                                   >
                                     {record.isActive ? 'Активен' : 'Истёк'}
                                   </Badge>
+                                  {refundRequest ? (
+                                    <Badge
+                                      color={refundStatusBadgeColor[refundRequest.status]}
+                                      variant="light"
+                                    >
+                                      {refundStatusLabel[refundRequest.status]}
+                                    </Badge>
+                                  ) : null}
                                 </Group>
 
                                 <Stack gap={6}>
                                   <Title className={styles.deviceTitle} order={3}>
-                                    {record.displayName}
-                                  </Title>
+                                  {getVisibleDeviceName(record.displayName)}
+                                </Title>
                                   <Text className={styles.deviceSubtitle}>
                                     {record.planTitle} • {record.inboundRemark}
                                   </Text>
@@ -301,18 +340,16 @@ export function DashboardPage({
                               <Group gap="xs">
                                 <AccessQrButton value={record.accessUri} variant="light" />
                                 <CopyAccessButton value={record.accessUri} variant="light" />
+                                <RequestRefundButton
+                                  accessId={record.id}
+                                  amountLabel={formatMoney(record.planPriceRub, 'RUB')}
+                                  refundRequest={refundRequest}
+                                />
                                 <DeleteAccessButton accessId={record.id} />
                               </Group>
                             </Group>
 
-                            <Textarea
-                              autosize
-                              classNames={{ input: styles.uriTextarea }}
-                              minRows={3}
-                              readOnly
-                              value={record.accessUri}
-                              variant="filled"
-                            />
+                            <VlessLink value={record.accessUri} />
                           </Stack>
                         </Stack>
                       );
@@ -332,6 +369,13 @@ export function DashboardPage({
                       Каждое устройство подписывается как {user.login} / имя девайса,
                       поэтому выдачи не путаются между собой.
                     </Text>
+                    <Group>
+                      <Link href="/instructions">
+                        <Button component="span" variant="light">
+                          Инструкция по настройке
+                        </Button>
+                      </Link>
+                    </Group>
                   </Stack>
                 </section>
 
@@ -373,7 +417,6 @@ export function DashboardPage({
                             plans={plans}
                             triggerLabel={plan.ctaText}
                             triggerVariant={plan.isFeatured ? 'filled' : 'light'}
-                            userLogin={user.login}
                           />
                         </Stack>
                       ))}

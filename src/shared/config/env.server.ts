@@ -67,61 +67,16 @@ export const threeXUiConfig = {
     10000,
     'THREE_X_UI_TIMEOUT_MS'
   ),
-  freePlanInboundId: parseInteger(
-    process.env.THREE_X_UI_FREE_PLAN_INBOUND_ID,
-    2,
-    'THREE_X_UI_FREE_PLAN_INBOUND_ID'
-  ),
-  freePlanTrafficGb: parseInteger(
-    process.env.THREE_X_UI_FREE_PLAN_TRAFFIC_GB,
-    10,
-    'THREE_X_UI_FREE_PLAN_TRAFFIC_GB'
-  ),
-  freePlanDurationDays: parseInteger(
-    process.env.THREE_X_UI_FREE_PLAN_DURATION_DAYS,
-    30,
-    'THREE_X_UI_FREE_PLAN_DURATION_DAYS'
-  ),
-  extendedPlanInboundId: parseInteger(
-    process.env.THREE_X_UI_EXTENDED_PLAN_INBOUND_ID,
-    1,
-    'THREE_X_UI_EXTENDED_PLAN_INBOUND_ID'
-  ),
-  extendedPlanDurationDays: parseInteger(
-    process.env.THREE_X_UI_EXTENDED_PLAN_DURATION_DAYS,
-    30,
-    'THREE_X_UI_EXTENDED_PLAN_DURATION_DAYS'
-  ),
-  extendedPlanPriceRub: parseInteger(
-    process.env.THREE_X_UI_EXTENDED_PLAN_PRICE_RUB,
-    250,
-    'THREE_X_UI_EXTENDED_PLAN_PRICE_RUB'
-  ),
-  extendedPlanSpeedMbps: parseInteger(
-    process.env.THREE_X_UI_EXTENDED_PLAN_SPEED_MBIT,
-    40,
-    'THREE_X_UI_EXTENDED_PLAN_SPEED_MBIT'
-  ),
-  customPlanInboundId: parseInteger(
-    process.env.THREE_X_UI_CUSTOM_PLAN_INBOUND_ID,
-    5,
-    'THREE_X_UI_CUSTOM_PLAN_INBOUND_ID'
-  ),
-  customPlanMinTrafficGb: parseInteger(
-    process.env.THREE_X_UI_CUSTOM_PLAN_MIN_TRAFFIC_GB,
-    10,
-    'THREE_X_UI_CUSTOM_PLAN_MIN_TRAFFIC_GB'
-  ),
-  customPlanMaxTrafficGb: parseInteger(
-    process.env.THREE_X_UI_CUSTOM_PLAN_MAX_TRAFFIC_GB,
-    200,
-    'THREE_X_UI_CUSTOM_PLAN_MAX_TRAFFIC_GB'
-  ),
-  customPlanPricePerGbRub: parseInteger(
-    process.env.THREE_X_UI_CUSTOM_PLAN_PRICE_PER_GB_RUB,
-    15,
-    'THREE_X_UI_CUSTOM_PLAN_PRICE_PER_GB_RUB'
-  ),
+} as const;
+
+export const yooKassaConfig = {
+  shopId: requireEnv('YOOKASSA_SHOP_ID'),
+  token:
+    process.env.YOOKASSA_TOKEN?.trim() ||
+    process.env.YOOKASSA_API_TOKEN?.trim() ||
+    requireEnv('YOOKASSA_TOKEN'),
+  redirectTo: requireEnv('YOOKASSA_REDIRECT_TO'),
+  apiBaseUrl: process.env.YOOKASSA_API_BASE_URL?.trim() || 'https://api.yookassa.ru/v3',
 } as const;
 
 export const authConfig = {

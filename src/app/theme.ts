@@ -42,43 +42,44 @@ const slate: MantineColorsTuple = [
   '#121212',
 ];
 
-const accent: MantineColorsTuple = [
-  '#f3ebff',
-  '#e5d4ff',
-  '#d1b0ff',
-  '#bc8aff',
-  '#aa68ff',
-  '#9a4fff',
-  '#8f3dff',
-  '#7b2fe0',
-  '#6828ba',
-  '#4f1f8f',
+const blueAccent: MantineColorsTuple = [
+  '#eff6ff',
+  '#dbeafe',
+  '#bfdbfe',
+  '#93c5fd',
+  '#60a5fa',
+  '#3b82f6',
+  '#2563eb',
+  '#1d4ed8',
+  '#1e40af',
+  '#1e3a8a',
 ];
 
 export const theme = createTheme({
   colors: {
     dark,
     slate,
-    accent,
+    accent: blueAccent,
+    singularity: blueAccent,
+    horizon: slate,
     appSurface: virtualColor({
       dark: 'dark',
       light: 'gray',
       name: 'appSurface',
     }),
   },
-  primaryColor: 'violet',
-  primaryShade: { light: 6, dark: 5 },
+  primaryColor: 'blue',
+  primaryShade: { light: 6, dark: 4 },
   cursorType: 'pointer',
-  defaultRadius: 'md',
+  defaultRadius: 'xl',
   black: '#000000',
   white: '#ffffff',
-  fontFamily:
-    "var(--font-jetbrains-mono), 'Fira Code', 'Roboto Mono', monospace",
+  fontFamily: "var(--font-montserrat), 'Segoe UI', sans-serif",
   fontFamilyMonospace:
     "var(--font-jetbrains-mono), 'Fira Code', 'Roboto Mono', monospace",
   headings: {
-    fontFamily: "var(--font-montserrat), 'Inter', sans-serif",
-    fontWeight: '700',
+    fontFamily: "var(--font-montserrat), 'Segoe UI', sans-serif",
+    fontWeight: '600',
   },
   shadows: {
     xs: 'none',
@@ -119,31 +120,31 @@ export const theme = createTheme({
     }),
     TextInput: TextInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 'xl',
         variant: 'filled',
       },
     }),
     Textarea: Textarea.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 'xl',
         variant: 'filled',
       },
     }),
     PasswordInput: PasswordInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 'xl',
         variant: 'filled',
       },
     }),
     Select: Select.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 'xl',
         variant: 'filled',
       },
     }),
     NumberInput: NumberInput.extend({
       defaultProps: {
-        radius: 'md',
+        radius: 'xl',
         variant: 'filled',
       },
     }),

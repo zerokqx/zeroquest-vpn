@@ -1,35 +1,45 @@
 import { adminPromoCodeSchema } from '@/entities/promo-code/model/schemas';
 import { createPromoCode, listPromoCodes } from '@/entities/promo-code';
 import { requireAdminUser } from '@/entities/user';
+import { withRouteLogging } from '@/shared/logging/server/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET(): Promise<Response> {
-  try {
-    await requireAdminUser();
-    const promoCodes = await listPromoCodes();
+export const GET = withRouteLogging(
+  'api.admin.promo-codes.get',
+  async (request: Request): Promise<Response> => {
+    void request;
 
-    return Response.json({
-      promoCodes,
-    });
-  } catch (error) {
-    return Response.json(
-      {
-        error:
-          error instanceof Error && error.message === 'Unauthorized'
-            ? 'Войдите как администратор'
-            : 'Доступ запрещён',
-      },
-      {
-        status:
-          error instanceof Error && error.message === 'Unauthorized' ? 401 : 403,
-      }
-    );
+    try {
+      await requireAdminUser();
+      const promoCodes = await listPromoCodes();
+
+      return Response.json({
+        promoCodes,
+      });
+    } catch (error) {
+      return Response.json(
+        {
+          error:
+            error instanceof Error && error.message === 'Unauthorized'
+              ? 'Войдите как администратор'
+              : 'Доступ запрещён',
+        },
+        {
+          status:
+            error instanceof Error && error.message === 'Unauthorized'
+              ? 401
+              : 403,
+        }
+      );
+    }
   }
-}
+);
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withRouteLogging(
+  'api.admin.promo-codes.post',
+  async (request: Request): Promise<Response> => {
   try {
     await requireAdminUser();
     const payload = await request.json();
@@ -65,4 +75,4 @@ export async function POST(request: Request): Promise<Response> {
       }
     );
   }
-}
+});

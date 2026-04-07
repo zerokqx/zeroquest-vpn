@@ -71,6 +71,9 @@ export function AppHeader() {
                 <Link className={styles.navLink} href="/">
                   Главная
                 </Link>
+                <Link className={styles.navLink} href="/instructions">
+                  Инструкция
+                </Link>
               </Group>
             </nav>
           </Group>

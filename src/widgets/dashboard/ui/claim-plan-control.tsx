@@ -11,18 +11,16 @@ import {
   Stack,
   Text,
   TextInput,
-  Textarea,
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import type { PublicPlan } from '@/entities/plan/model/types';
-import type { ClaimPlanResponse } from '@/features/claim-plan/model/types';
-import { AccessQrButton } from '@/shared/ui/access-qr-button/access-qr-button';
-import { claimDashboardPlanAction } from '../server/actions';
+import { createPaymentRequest } from '@/features/payments/api/create-payment';
+import { formatMoney } from '@/shared/lib/currency';
+import { logClientError, logClientEvent } from '@/shared/logging/client/logger';
+import { setCurrentPayment } from '@/shared/store/current-payment/client/store';
 import { formatPlanPrice } from '../model/formatting';
-import { CopyAccessButton } from './copy-access-button';
 import styles from './dashboard-page.module.css';
 
 interface ClaimPlanControlProps {
@@ -30,7 +28,6 @@ interface ClaimPlanControlProps {
   plans: PublicPlan[];
   triggerLabel: string;
   triggerVariant?: 'filled' | 'light';
-  userLogin: string;
 }
 
 interface ClaimPlanFormState {
@@ -75,16 +72,13 @@ export function ClaimPlanControl({
   plans,
   triggerLabel,
   triggerVariant = 'light',
-  userLogin,
 }: ClaimPlanControlProps) {
   const [opened, { close, open }] = useDisclosure(false);
   const [form, setForm] = useState<ClaimPlanFormState>(() =>
     getInitialFormState(plans, initialPlanId)
   );
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ClaimPlanResponse | null>(null);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const selectedPlan = plans.find((plan) => plan.id === form.planId) ?? plans[0] ?? null;
   const calculatedPrice =
     selectedPlan?.allowsCustomTraffic && selectedPlan.customPricePerGbRub
@@ -94,7 +88,6 @@ export function ClaimPlanControl({
 
   const resetState = () => {
     setError(null);
-    setResult(null);
     setForm(getInitialFormState(plans, initialPlanId));
   };
 
@@ -104,27 +97,32 @@ export function ClaimPlanControl({
   };
 
   const closeModal = () => {
-    const shouldRefresh = result !== null;
-
     close();
     resetState();
-
-    if (shouldRefresh) {
-      router.refresh();
-    }
   };
 
   const submit = () => {
     if (!selectedPlan) {
+      logClientEvent('warn', 'checkout', 'payment.submit.blocked', {
+        reason: 'plan-unavailable',
+      });
       setError('Тариф недоступен');
       return;
     }
 
+    logClientEvent('info', 'checkout', 'payment.submit.started', {
+      customTrafficGb: selectedPlan.allowsCustomTraffic
+        ? form.customTrafficGb ?? null
+        : null,
+      deviceName: form.deviceName,
+      planId: selectedPlan.id,
+      promoCode: form.promoCode.trim() || null,
+    });
     setError(null);
 
     startTransition(async () => {
       try {
-        const response = await claimDashboardPlanAction({
+        const response = await createPaymentRequest({
           customTrafficGb: selectedPlan.allowsCustomTraffic
             ? form.customTrafficGb
             : undefined,
@@ -132,13 +130,31 @@ export function ClaimPlanControl({
           planId: selectedPlan.id,
           promoCode: form.promoCode.trim() || undefined,
         });
-
-        setResult(response);
+        setCurrentPayment({
+          amount: response.amount,
+          confirmationUrl: response.confirmationUrl,
+          createdAt: new Date().toISOString(),
+          currency: response.currency,
+          paymentId: response.paymentId,
+          planTitle: response.planTitle,
+          status: response.status,
+        });
+        logClientEvent('info', 'checkout', 'payment.submit.succeeded', {
+          amount: response.amount,
+          paymentId: response.paymentId,
+          planTitle: response.planTitle,
+          redirectTo: response.confirmationUrl,
+          status: response.status,
+        });
+        window.location.assign(response.confirmationUrl);
       } catch (requestError) {
+        logClientError('checkout', 'payment.submit.failed', requestError, {
+          planId: selectedPlan.id,
+        });
         setError(
           requestError instanceof Error
             ? requestError.message
-            : 'Не удалось добавить устройство'
+            : 'Не удалось создать платеж'
         );
       }
     });
@@ -159,8 +175,7 @@ export function ClaimPlanControl({
       >
         <Stack gap="lg">
           <Text className={styles.muted}>
-            Подключение будет подписано как: {userLogin} /{' '}
-            {form.deviceName || 'имя устройства'}.
+            Подключение будет подписано только именем устройства.
           </Text>
 
           {error ? (
@@ -187,7 +202,6 @@ export function ClaimPlanControl({
                 customTrafficGb: targetPlan?.customTrafficMinGb ?? undefined,
                 planId: value,
               }));
-              setResult(null);
             }}
             styles={fieldStyles}
             value={form.planId}
@@ -242,14 +256,12 @@ export function ClaimPlanControl({
             />
           ) : null}
 
-          <Paper className={styles.modalPanel} p="md" radius="20px">
+          <Paper className={styles.modalPanel} p="md" radius="xl">
             <Stack gap={4}>
               <Text className={styles.muted} size="sm">
                 Стоимость
               </Text>
-              <Title order={3}>
-                {calculatedPrice === 0 ? '0 ₽' : `${calculatedPrice} ₽`}
-              </Title>
+              <Title order={3}>{formatMoney(calculatedPrice, selectedPlan?.currency ?? 'RUB')}</Title>
               <Text className={styles.muted} size="sm">
                 {selectedPlan?.allowsCustomTraffic
                   ? `${form.customTrafficGb ?? selectedPlan.customTrafficMinGb} GB по кастомному тарифу`
@@ -258,38 +270,15 @@ export function ClaimPlanControl({
             </Stack>
           </Paper>
 
-          {result ? (
-            <Alert color="green" radius="xl" title="Устройство добавлено" variant="light">
-              Конфиг уже выпущен. После закрытия окна список устройств обновится.
-            </Alert>
-          ) : null}
+          <Alert color="blue" radius="xl" title="Как это работает" variant="light">
+            После перехода в ЮKassa и подтверждения оплаты ключ появится в этом
+            dashboard автоматически.
+          </Alert>
 
-          {result ? (
-            <Textarea
-              autosize
-              classNames={{ input: styles.resultTextarea }}
-              minRows={4}
-              readOnly
-              value={result.access.uri}
-              variant="filled"
-            />
-          ) : null}
-
-          <Group justify={result ? 'space-between' : 'flex-end'}>
-            {result ? (
-              <Group gap="xs">
-                <AccessQrButton value={result.access.uri} />
-                <CopyAccessButton value={result.access.uri} />
-              </Group>
-            ) : null}
-
-            {result ? (
-              <Button onClick={closeModal}>Закрыть и обновить</Button>
-            ) : (
-              <Button loading={isPending} onClick={submit}>
-                Выпустить доступ
-              </Button>
-            )}
+          <Group justify="flex-end">
+            <Button loading={isPending} onClick={submit}>
+              Перейти к оплате
+            </Button>
           </Group>
         </Stack>
       </Modal>

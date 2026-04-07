@@ -10,7 +10,6 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  Textarea,
   Title,
 } from '@mantine/core';
 import Link from 'next/link';
@@ -19,6 +18,8 @@ import { LogoutButton } from '@/features/auth/ui/logout-button';
 import type { AccessRecordWithStatus } from '@/entities/access/model/types';
 import type { User } from '@/entities/user/model/types';
 import { AccessQrButton } from '@/shared/ui/access-qr-button/access-qr-button';
+import { getVisibleDeviceName } from '@/shared/lib/display-name';
+import { VlessLink } from '@/shared/ui/vless-link/vless-link';
 import { CopyAccessButton } from '@/widgets/dashboard/ui/copy-access-button';
 import styles from './profile-page.module.css';
 
@@ -78,7 +79,7 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
     <div className={styles.page}>
       <Container size="xl">
         <Stack gap="xl">
-          <Paper className={styles.hero} p={{ base: 'xl', md: 40 }} radius="32px">
+          <Paper className={styles.hero} p={{ base: 'xl', md: 40 }} radius="xl">
             <Stack gap="xl">
               <Group justify="space-between" gap="md" wrap="wrap">
                 <Stack gap="md">
@@ -122,8 +123,7 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
                       @{user.login}
                     </Title>
                     <Text c="dimmed" size="sm">
-                      Имя пользователя автоматически попадает в подпись
-                      подключения.
+                      Технический идентификатор хранится внутри системы.
                     </Text>
                   </Stack>
                 </Paper>
@@ -160,13 +160,13 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
           </Paper>
 
           {error ? (
-            <Paper className={styles.emptyState} p="lg" radius="24px">
+            <Paper className={styles.emptyState} p="lg" radius="xl">
               <Text c="red.4">{error}</Text>
             </Paper>
           ) : null}
 
           {records.length === 0 ? (
-            <Paper className={styles.emptyState} p="xl" radius="28px">
+            <Paper className={styles.emptyState} p="xl" radius="xl">
               <Stack gap="md">
                 <Title c="white" order={3}>
                   Пока здесь пусто
@@ -186,7 +186,7 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
             <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="xl">
               {records.map((record) => {
                 return (
-                  <Paper className={styles.recordCard} key={record.id} p="xl" radius="28px">
+                  <Paper className={styles.recordCard} key={record.id} p="xl" radius="xl">
                     <Stack gap="lg">
                       <Group justify="space-between" gap="md" wrap="wrap">
                         <Stack gap={6}>
@@ -205,7 +205,7 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
                           </Group>
 
                           <Title c="white" order={2}>
-                            {record.displayName}
+                            {getVisibleDeviceName(record.displayName)}
                           </Title>
                           <Group gap="xs">
                             <Text c="dimmed">{record.planTitle}</Text>
@@ -316,16 +316,7 @@ export function ProfilePage({ accessRecords, user }: ProfilePageProps) {
                             </Group>
                           </Group>
 
-                          <Textarea
-                            autosize
-                            classNames={{
-                              input: styles.uriTextarea,
-                            }}
-                            minRows={4}
-                            readOnly
-                            value={record.accessUri}
-                            variant="filled"
-                          />
+                          <VlessLink value={record.accessUri} />
                         </Stack>
                       </Paper>
 

@@ -1,15 +1,16 @@
 .wrap {
   position: sticky;
   top: 0;
-  z-index: 40;
-  background: color-mix(in srgb, var(--background) 94%, transparent);
+  z-index: 1200;
+  background: var(--surface);
   border-bottom: 1px solid var(--surface-border);
-  backdrop-filter: blur(12px);
 }
 
 .bar {
   min-height: var(--header-height);
   padding: 14px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .primaryRow {
@@ -29,7 +30,7 @@
   text-align: center;
   border-radius: 14px;
   border: 1px solid var(--surface-border);
-  background: var(--surface);
+  background: var(--background-subtle);
   color: var(--foreground-strong);
   font-weight: 700;
 }
@@ -68,7 +69,7 @@
   padding: 0.35rem 0.75rem 0.35rem 0.35rem;
   border-radius: 999px;
   border: 1px solid var(--surface-border);
-  background: var(--surface);
+  background: var(--background-subtle);
 }
 
 .identityName {
@@ -84,6 +85,10 @@
 
 .mobileOnly {
   margin-left: auto;
+}
+
+.mobileQuickActions {
+  gap: 0.5rem;
 }
 
 @media (max-width: 48em) {

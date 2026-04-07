@@ -17,23 +17,5 @@ services:
     volumes:
       - vpn_shop_postgres_data:/var/lib/postgresql/data
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: vpn-shop-app
-    restart: unless-stopped
-    network_mode: host
-    depends_on:
-      postgres:
-        condition: service_healthy
-    env_file:
-      - .env.local
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5433/vpn_shop?schema=public
-      NODE_ENV: production
-      NEXT_TELEMETRY_DISABLED: "1"
-      PORT: "5901"
-
 volumes:
   vpn_shop_postgres_data:

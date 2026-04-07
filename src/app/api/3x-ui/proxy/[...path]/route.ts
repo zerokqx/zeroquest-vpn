@@ -8,6 +8,7 @@ import {
   readRequestBody,
   toResponseBody,
 } from '@/shared/api/three-x-ui/server';
+import { withRouteLogging } from '@/shared/logging/server/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,7 +19,9 @@ interface ProxyRouteContext {
   }>;
 }
 
-const handleProxyRequest = async (
+const handleProxyRequest = withRouteLogging(
+  'api.3x-ui.proxy',
+  async (
   request: Request,
   context: ProxyRouteContext
 ): Promise<Response> => {
@@ -47,7 +50,7 @@ const handleProxyRequest = async (
       { status: 502 }
     );
   }
-};
+});
 
 export const GET = handleProxyRequest;
 export const POST = handleProxyRequest;

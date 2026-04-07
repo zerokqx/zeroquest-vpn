@@ -1,11 +1,14 @@
 import { createAuthResponse } from '@/shared/auth/server/session';
 import { authCredentialsSchema } from '@/features/auth/model/schemas';
 import { registerUser } from '@/features/auth/server/register-user';
+import { withRouteLogging } from '@/shared/logging/server/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withRouteLogging(
+  'api.auth.register.post',
+  async (request: Request): Promise<Response> => {
   try {
     const body = await request.json();
     const parsed = authCredentialsSchema.safeParse(body);
@@ -34,4 +37,4 @@ export async function POST(request: Request): Promise<Response> {
       }
     );
   }
-}
+});

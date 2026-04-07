@@ -30,17 +30,29 @@ export async function HeaderAuthSection() {
         {user ? (
           <Group gap="sm" wrap="nowrap">
             <Group gap="xs" wrap="nowrap">
+              <Link href="/instructions">
+                <Button component="span" variant="light">
+                  Инструкция
+                </Button>
+              </Link>
               <Link href="/dashboard">
                 <Button component="span" variant="light">
                   Dashboard
                 </Button>
               </Link>
               {user.role === 'admin' ? (
-                <Link href="/admin">
-                  <Button component="span" variant="light">
-                    Admin
-                  </Button>
-                </Link>
+                <>
+                  <Link href="/admin">
+                    <Button component="span" variant="light">
+                      Admin
+                    </Button>
+                  </Link>
+                  <Link href="/admin/refunds">
+                    <Button component="span" variant="light">
+                      Refunds
+                    </Button>
+                  </Link>
+                </>
               ) : null}
             </Group>
             <Group className={styles.identity} gap="sm" wrap="nowrap">
@@ -71,6 +83,20 @@ export async function HeaderAuthSection() {
       </Group>
 
       <Group className={styles.mobileOnly} hiddenFrom="md">
+        {!user ? (
+          <Group className={styles.mobileQuickActions} gap="xs" wrap="nowrap">
+            <Link href="/auth">
+              <Button component="span" size="compact-sm" variant="light">
+                Войти
+              </Button>
+            </Link>
+            <Link href="/auth?mode=register">
+              <Button component="span" size="compact-sm">
+                Регистрация
+              </Button>
+            </Link>
+          </Group>
+        ) : null}
         <MobileHeaderMenu
           user={user ? { login: user.login, role: user.role } : null}
         />

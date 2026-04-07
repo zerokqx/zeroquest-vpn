@@ -10,6 +10,10 @@
  */
 export type * from './models/UserStore'
 export type * from './models/PlanStore'
+export type * from './models/InboundStore'
+export type * from './models/PlanInboundStore'
 export type * from './models/PromoCodeStore'
-export type * from './models/AccessRecordStore'
+export type * from './models/PaymentStore'
+export type * from './models/VpnKeyStore'
+export type * from './models/RefundRequestStore'
 export type * from './commonInputTypes'

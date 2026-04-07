@@ -190,7 +190,10 @@ export type UserStoreWhereInput = {
   payload?: Prisma.StringFilter<"UserStore"> | string
   createdAt?: Prisma.DateTimeFilter<"UserStore"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserStore"> | Date | string
-  accesses?: Prisma.AccessRecordStoreListRelationFilter
+  payments?: Prisma.PaymentStoreListRelationFilter
+  refundRequests?: Prisma.RefundRequestStoreListRelationFilter
+  reviewedRefundRequests?: Prisma.RefundRequestStoreListRelationFilter
+  vpnKeys?: Prisma.VpnKeyStoreListRelationFilter
 }
 
 export type UserStoreOrderByWithRelationInput = {
@@ -200,7 +203,10 @@ export type UserStoreOrderByWithRelationInput = {
   payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  accesses?: Prisma.AccessRecordStoreOrderByRelationAggregateInput
+  payments?: Prisma.PaymentStoreOrderByRelationAggregateInput
+  refundRequests?: Prisma.RefundRequestStoreOrderByRelationAggregateInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreOrderByRelationAggregateInput
+  vpnKeys?: Prisma.VpnKeyStoreOrderByRelationAggregateInput
 }
 
 export type UserStoreWhereUniqueInput = Prisma.AtLeast<{
@@ -213,7 +219,10 @@ export type UserStoreWhereUniqueInput = Prisma.AtLeast<{
   payload?: Prisma.StringFilter<"UserStore"> | string
   createdAt?: Prisma.DateTimeFilter<"UserStore"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserStore"> | Date | string
-  accesses?: Prisma.AccessRecordStoreListRelationFilter
+  payments?: Prisma.PaymentStoreListRelationFilter
+  refundRequests?: Prisma.RefundRequestStoreListRelationFilter
+  reviewedRefundRequests?: Prisma.RefundRequestStoreListRelationFilter
+  vpnKeys?: Prisma.VpnKeyStoreListRelationFilter
 }, "id" | "loginLookup">
 
 export type UserStoreOrderByWithAggregationInput = {
@@ -247,7 +256,10 @@ export type UserStoreCreateInput = {
   payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  accesses?: Prisma.AccessRecordStoreCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutUserInput
 }
 
 export type UserStoreUncheckedCreateInput = {
@@ -257,7 +269,10 @@ export type UserStoreUncheckedCreateInput = {
   payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  accesses?: Prisma.AccessRecordStoreUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserStoreUpdateInput = {
@@ -267,7 +282,10 @@ export type UserStoreUpdateInput = {
   payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accesses?: Prisma.AccessRecordStoreUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentStoreUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutUserNestedInput
 }
 
 export type UserStoreUncheckedUpdateInput = {
@@ -277,7 +295,10 @@ export type UserStoreUncheckedUpdateInput = {
   payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accesses?: Prisma.AccessRecordStoreUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserStoreCreateManyInput = {
@@ -339,6 +360,11 @@ export type UserStoreScalarRelationFilter = {
   isNot?: Prisma.UserStoreWhereInput
 }
 
+export type UserStoreNullableScalarRelationFilter = {
+  is?: Prisma.UserStoreWhereInput | null
+  isNot?: Prisma.UserStoreWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -347,70 +373,318 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
-export type UserStoreCreateNestedOneWithoutAccessesInput = {
-  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutAccessesInput, Prisma.UserStoreUncheckedCreateWithoutAccessesInput>
-  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutAccessesInput
+export type UserStoreCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutPaymentsInput, Prisma.UserStoreUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutPaymentsInput
   connect?: Prisma.UserStoreWhereUniqueInput
 }
 
-export type UserStoreUpdateOneRequiredWithoutAccessesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutAccessesInput, Prisma.UserStoreUncheckedCreateWithoutAccessesInput>
-  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutAccessesInput
-  upsert?: Prisma.UserStoreUpsertWithoutAccessesInput
+export type UserStoreUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutPaymentsInput, Prisma.UserStoreUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.UserStoreUpsertWithoutPaymentsInput
   connect?: Prisma.UserStoreWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserStoreUpdateToOneWithWhereWithoutAccessesInput, Prisma.UserStoreUpdateWithoutAccessesInput>, Prisma.UserStoreUncheckedUpdateWithoutAccessesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserStoreUpdateToOneWithWhereWithoutPaymentsInput, Prisma.UserStoreUpdateWithoutPaymentsInput>, Prisma.UserStoreUncheckedUpdateWithoutPaymentsInput>
 }
 
-export type UserStoreCreateWithoutAccessesInput = {
+export type UserStoreCreateNestedOneWithoutVpnKeysInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutVpnKeysInput, Prisma.UserStoreUncheckedCreateWithoutVpnKeysInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutVpnKeysInput
+  connect?: Prisma.UserStoreWhereUniqueInput
+}
+
+export type UserStoreUpdateOneRequiredWithoutVpnKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutVpnKeysInput, Prisma.UserStoreUncheckedCreateWithoutVpnKeysInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutVpnKeysInput
+  upsert?: Prisma.UserStoreUpsertWithoutVpnKeysInput
+  connect?: Prisma.UserStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserStoreUpdateToOneWithWhereWithoutVpnKeysInput, Prisma.UserStoreUpdateWithoutVpnKeysInput>, Prisma.UserStoreUncheckedUpdateWithoutVpnKeysInput>
+}
+
+export type UserStoreCreateNestedOneWithoutRefundRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutRefundRequestsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutRefundRequestsInput
+  connect?: Prisma.UserStoreWhereUniqueInput
+}
+
+export type UserStoreCreateNestedOneWithoutReviewedRefundRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutReviewedRefundRequestsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutReviewedRefundRequestsInput
+  connect?: Prisma.UserStoreWhereUniqueInput
+}
+
+export type UserStoreUpdateOneRequiredWithoutRefundRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutRefundRequestsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutRefundRequestsInput
+  upsert?: Prisma.UserStoreUpsertWithoutRefundRequestsInput
+  connect?: Prisma.UserStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserStoreUpdateToOneWithWhereWithoutRefundRequestsInput, Prisma.UserStoreUpdateWithoutRefundRequestsInput>, Prisma.UserStoreUncheckedUpdateWithoutRefundRequestsInput>
+}
+
+export type UserStoreUpdateOneWithoutReviewedRefundRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserStoreCreateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutReviewedRefundRequestsInput>
+  connectOrCreate?: Prisma.UserStoreCreateOrConnectWithoutReviewedRefundRequestsInput
+  upsert?: Prisma.UserStoreUpsertWithoutReviewedRefundRequestsInput
+  disconnect?: Prisma.UserStoreWhereInput | boolean
+  delete?: Prisma.UserStoreWhereInput | boolean
+  connect?: Prisma.UserStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserStoreUpdateToOneWithWhereWithoutReviewedRefundRequestsInput, Prisma.UserStoreUpdateWithoutReviewedRefundRequestsInput>, Prisma.UserStoreUncheckedUpdateWithoutReviewedRefundRequestsInput>
+}
+
+export type UserStoreCreateWithoutPaymentsInput = {
   id: string
   role: string
   loginLookup: string
   payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  refundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutUserInput
 }
 
-export type UserStoreUncheckedCreateWithoutAccessesInput = {
+export type UserStoreUncheckedCreateWithoutPaymentsInput = {
   id: string
   role: string
   loginLookup: string
   payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  refundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserStoreCreateOrConnectWithoutAccessesInput = {
+export type UserStoreCreateOrConnectWithoutPaymentsInput = {
   where: Prisma.UserStoreWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserStoreCreateWithoutAccessesInput, Prisma.UserStoreUncheckedCreateWithoutAccessesInput>
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutPaymentsInput, Prisma.UserStoreUncheckedCreateWithoutPaymentsInput>
 }
 
-export type UserStoreUpsertWithoutAccessesInput = {
-  update: Prisma.XOR<Prisma.UserStoreUpdateWithoutAccessesInput, Prisma.UserStoreUncheckedUpdateWithoutAccessesInput>
-  create: Prisma.XOR<Prisma.UserStoreCreateWithoutAccessesInput, Prisma.UserStoreUncheckedCreateWithoutAccessesInput>
+export type UserStoreUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.UserStoreUpdateWithoutPaymentsInput, Prisma.UserStoreUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutPaymentsInput, Prisma.UserStoreUncheckedCreateWithoutPaymentsInput>
   where?: Prisma.UserStoreWhereInput
 }
 
-export type UserStoreUpdateToOneWithWhereWithoutAccessesInput = {
+export type UserStoreUpdateToOneWithWhereWithoutPaymentsInput = {
   where?: Prisma.UserStoreWhereInput
-  data: Prisma.XOR<Prisma.UserStoreUpdateWithoutAccessesInput, Prisma.UserStoreUncheckedUpdateWithoutAccessesInput>
+  data: Prisma.XOR<Prisma.UserStoreUpdateWithoutPaymentsInput, Prisma.UserStoreUncheckedUpdateWithoutPaymentsInput>
 }
 
-export type UserStoreUpdateWithoutAccessesInput = {
+export type UserStoreUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
   payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutUserNestedInput
 }
 
-export type UserStoreUncheckedUpdateWithoutAccessesInput = {
+export type UserStoreUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
   payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserStoreCreateWithoutVpnKeysInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutReviewedByUserInput
+}
+
+export type UserStoreUncheckedCreateWithoutVpnKeysInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutReviewedByUserInput
+}
+
+export type UserStoreCreateOrConnectWithoutVpnKeysInput = {
+  where: Prisma.UserStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutVpnKeysInput, Prisma.UserStoreUncheckedCreateWithoutVpnKeysInput>
+}
+
+export type UserStoreUpsertWithoutVpnKeysInput = {
+  update: Prisma.XOR<Prisma.UserStoreUpdateWithoutVpnKeysInput, Prisma.UserStoreUncheckedUpdateWithoutVpnKeysInput>
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutVpnKeysInput, Prisma.UserStoreUncheckedCreateWithoutVpnKeysInput>
+  where?: Prisma.UserStoreWhereInput
+}
+
+export type UserStoreUpdateToOneWithWhereWithoutVpnKeysInput = {
+  where?: Prisma.UserStoreWhereInput
+  data: Prisma.XOR<Prisma.UserStoreUpdateWithoutVpnKeysInput, Prisma.UserStoreUncheckedUpdateWithoutVpnKeysInput>
+}
+
+export type UserStoreUpdateWithoutVpnKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutReviewedByUserNestedInput
+}
+
+export type UserStoreUncheckedUpdateWithoutVpnKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutReviewedByUserNestedInput
+}
+
+export type UserStoreCreateWithoutRefundRequestsInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutUserInput
+}
+
+export type UserStoreUncheckedCreateWithoutRefundRequestsInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutUserInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutReviewedByUserInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserStoreCreateOrConnectWithoutRefundRequestsInput = {
+  where: Prisma.UserStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutRefundRequestsInput>
+}
+
+export type UserStoreCreateWithoutReviewedRefundRequestsInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreCreateNestedManyWithoutUserInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutUserInput
+}
+
+export type UserStoreUncheckedCreateWithoutReviewedRefundRequestsInput = {
+  id: string
+  role: string
+  loginLookup: string
+  payload: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutUserInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedCreateNestedManyWithoutUserInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserStoreCreateOrConnectWithoutReviewedRefundRequestsInput = {
+  where: Prisma.UserStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutReviewedRefundRequestsInput>
+}
+
+export type UserStoreUpsertWithoutRefundRequestsInput = {
+  update: Prisma.XOR<Prisma.UserStoreUpdateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedUpdateWithoutRefundRequestsInput>
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutRefundRequestsInput>
+  where?: Prisma.UserStoreWhereInput
+}
+
+export type UserStoreUpdateToOneWithWhereWithoutRefundRequestsInput = {
+  where?: Prisma.UserStoreWhereInput
+  data: Prisma.XOR<Prisma.UserStoreUpdateWithoutRefundRequestsInput, Prisma.UserStoreUncheckedUpdateWithoutRefundRequestsInput>
+}
+
+export type UserStoreUpdateWithoutRefundRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutUserNestedInput
+}
+
+export type UserStoreUncheckedUpdateWithoutRefundRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutUserNestedInput
+  reviewedRefundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutReviewedByUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserStoreUpsertWithoutReviewedRefundRequestsInput = {
+  update: Prisma.XOR<Prisma.UserStoreUpdateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedUpdateWithoutReviewedRefundRequestsInput>
+  create: Prisma.XOR<Prisma.UserStoreCreateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedCreateWithoutReviewedRefundRequestsInput>
+  where?: Prisma.UserStoreWhereInput
+}
+
+export type UserStoreUpdateToOneWithWhereWithoutReviewedRefundRequestsInput = {
+  where?: Prisma.UserStoreWhereInput
+  data: Prisma.XOR<Prisma.UserStoreUpdateWithoutReviewedRefundRequestsInput, Prisma.UserStoreUncheckedUpdateWithoutReviewedRefundRequestsInput>
+}
+
+export type UserStoreUpdateWithoutReviewedRefundRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUpdateManyWithoutUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutUserNestedInput
+}
+
+export type UserStoreUncheckedUpdateWithoutReviewedRefundRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  loginLookup?: Prisma.StringFieldUpdateOperationsInput | string
+  payload?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutUserNestedInput
+  refundRequests?: Prisma.RefundRequestStoreUncheckedUpdateManyWithoutUserNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -419,11 +693,17 @@ export type UserStoreUncheckedUpdateWithoutAccessesInput = {
  */
 
 export type UserStoreCountOutputType = {
-  accesses: number
+  payments: number
+  refundRequests: number
+  reviewedRefundRequests: number
+  vpnKeys: number
 }
 
 export type UserStoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  accesses?: boolean | UserStoreCountOutputTypeCountAccessesArgs
+  payments?: boolean | UserStoreCountOutputTypeCountPaymentsArgs
+  refundRequests?: boolean | UserStoreCountOutputTypeCountRefundRequestsArgs
+  reviewedRefundRequests?: boolean | UserStoreCountOutputTypeCountReviewedRefundRequestsArgs
+  vpnKeys?: boolean | UserStoreCountOutputTypeCountVpnKeysArgs
 }
 
 /**
@@ -439,8 +719,29 @@ export type UserStoreCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserStoreCountOutputType without action
  */
-export type UserStoreCountOutputTypeCountAccessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccessRecordStoreWhereInput
+export type UserStoreCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentStoreWhereInput
+}
+
+/**
+ * UserStoreCountOutputType without action
+ */
+export type UserStoreCountOutputTypeCountRefundRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefundRequestStoreWhereInput
+}
+
+/**
+ * UserStoreCountOutputType without action
+ */
+export type UserStoreCountOutputTypeCountReviewedRefundRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefundRequestStoreWhereInput
+}
+
+/**
+ * UserStoreCountOutputType without action
+ */
+export type UserStoreCountOutputTypeCountVpnKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VpnKeyStoreWhereInput
 }
 
 
@@ -451,7 +752,10 @@ export type UserStoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   payload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  accesses?: boolean | Prisma.UserStore$accessesArgs<ExtArgs>
+  payments?: boolean | Prisma.UserStore$paymentsArgs<ExtArgs>
+  refundRequests?: boolean | Prisma.UserStore$refundRequestsArgs<ExtArgs>
+  reviewedRefundRequests?: boolean | Prisma.UserStore$reviewedRefundRequestsArgs<ExtArgs>
+  vpnKeys?: boolean | Prisma.UserStore$vpnKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserStoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userStore"]>
 
@@ -484,7 +788,10 @@ export type UserStoreSelectScalar = {
 
 export type UserStoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "role" | "loginLookup" | "payload" | "createdAt" | "updatedAt", ExtArgs["result"]["userStore"]>
 export type UserStoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  accesses?: boolean | Prisma.UserStore$accessesArgs<ExtArgs>
+  payments?: boolean | Prisma.UserStore$paymentsArgs<ExtArgs>
+  refundRequests?: boolean | Prisma.UserStore$refundRequestsArgs<ExtArgs>
+  reviewedRefundRequests?: boolean | Prisma.UserStore$reviewedRefundRequestsArgs<ExtArgs>
+  vpnKeys?: boolean | Prisma.UserStore$vpnKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserStoreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserStoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -493,7 +800,10 @@ export type UserStoreIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $UserStorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserStore"
   objects: {
-    accesses: Prisma.$AccessRecordStorePayload<ExtArgs>[]
+    payments: Prisma.$PaymentStorePayload<ExtArgs>[]
+    refundRequests: Prisma.$RefundRequestStorePayload<ExtArgs>[]
+    reviewedRefundRequests: Prisma.$RefundRequestStorePayload<ExtArgs>[]
+    vpnKeys: Prisma.$VpnKeyStorePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -896,7 +1206,10 @@ readonly fields: UserStoreFieldRefs;
  */
 export interface Prisma__UserStoreClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  accesses<T extends Prisma.UserStore$accessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserStore$accessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessRecordStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.UserStore$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserStore$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refundRequests<T extends Prisma.UserStore$refundRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserStore$refundRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedRefundRequests<T extends Prisma.UserStore$reviewedRefundRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserStore$reviewedRefundRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  vpnKeys<T extends Prisma.UserStore$vpnKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserStore$vpnKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VpnKeyStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1325,27 +1638,99 @@ export type UserStoreDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * UserStore.accesses
+ * UserStore.payments
  */
-export type UserStore$accessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UserStore$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AccessRecordStore
+   * Select specific fields to fetch from the PaymentStore
    */
-  select?: Prisma.AccessRecordStoreSelect<ExtArgs> | null
+  select?: Prisma.PaymentStoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AccessRecordStore
+   * Omit specific fields from the PaymentStore
    */
-  omit?: Prisma.AccessRecordStoreOmit<ExtArgs> | null
+  omit?: Prisma.PaymentStoreOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AccessRecordStoreInclude<ExtArgs> | null
-  where?: Prisma.AccessRecordStoreWhereInput
-  orderBy?: Prisma.AccessRecordStoreOrderByWithRelationInput | Prisma.AccessRecordStoreOrderByWithRelationInput[]
-  cursor?: Prisma.AccessRecordStoreWhereUniqueInput
+  include?: Prisma.PaymentStoreInclude<ExtArgs> | null
+  where?: Prisma.PaymentStoreWhereInput
+  orderBy?: Prisma.PaymentStoreOrderByWithRelationInput | Prisma.PaymentStoreOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentStoreWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AccessRecordStoreScalarFieldEnum | Prisma.AccessRecordStoreScalarFieldEnum[]
+  distinct?: Prisma.PaymentStoreScalarFieldEnum | Prisma.PaymentStoreScalarFieldEnum[]
+}
+
+/**
+ * UserStore.refundRequests
+ */
+export type UserStore$refundRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefundRequestStore
+   */
+  select?: Prisma.RefundRequestStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefundRequestStore
+   */
+  omit?: Prisma.RefundRequestStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundRequestStoreInclude<ExtArgs> | null
+  where?: Prisma.RefundRequestStoreWhereInput
+  orderBy?: Prisma.RefundRequestStoreOrderByWithRelationInput | Prisma.RefundRequestStoreOrderByWithRelationInput[]
+  cursor?: Prisma.RefundRequestStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefundRequestStoreScalarFieldEnum | Prisma.RefundRequestStoreScalarFieldEnum[]
+}
+
+/**
+ * UserStore.reviewedRefundRequests
+ */
+export type UserStore$reviewedRefundRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefundRequestStore
+   */
+  select?: Prisma.RefundRequestStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefundRequestStore
+   */
+  omit?: Prisma.RefundRequestStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundRequestStoreInclude<ExtArgs> | null
+  where?: Prisma.RefundRequestStoreWhereInput
+  orderBy?: Prisma.RefundRequestStoreOrderByWithRelationInput | Prisma.RefundRequestStoreOrderByWithRelationInput[]
+  cursor?: Prisma.RefundRequestStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefundRequestStoreScalarFieldEnum | Prisma.RefundRequestStoreScalarFieldEnum[]
+}
+
+/**
+ * UserStore.vpnKeys
+ */
+export type UserStore$vpnKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VpnKeyStore
+   */
+  select?: Prisma.VpnKeyStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VpnKeyStore
+   */
+  omit?: Prisma.VpnKeyStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VpnKeyStoreInclude<ExtArgs> | null
+  where?: Prisma.VpnKeyStoreWhereInput
+  orderBy?: Prisma.VpnKeyStoreOrderByWithRelationInput | Prisma.VpnKeyStoreOrderByWithRelationInput[]
+  cursor?: Prisma.VpnKeyStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VpnKeyStoreScalarFieldEnum | Prisma.VpnKeyStoreScalarFieldEnum[]
 }
 
 /**

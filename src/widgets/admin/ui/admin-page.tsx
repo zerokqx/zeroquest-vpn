@@ -16,6 +16,7 @@ import {
   NumberField,
   NumberInput,
   ReferenceArrayInput,
+  ReferenceInput,
   Resource,
   SelectArrayInput,
   SelectInput,
@@ -29,20 +30,26 @@ import {
   type RaRecord,
 } from 'react-admin';
 import { Card, CardContent, Typography } from '@mui/material';
+import type { Inbound } from '@/entities/inbound/model/types';
 import type { Plan } from '@/entities/plan/model/types';
 import type { PromoCode } from '@/entities/promo-code/model/types';
 
-type AdminResourceName = 'plans' | 'promo-codes';
+type AdminResourceName = 'inbounds' | 'plans' | 'promo-codes';
 
 type PlanRecord = Plan & {
   trafficLimitGb: number | null;
 };
 
-type AdminRecord = (PlanRecord | PromoCode) & RaRecord;
+type AdminRecord = (Inbound | PlanRecord | PromoCode) & RaRecord;
 
 const BYTES_IN_GIGABYTE = 1024 ** 3;
 
 const resourceConfig = {
+  inbounds: {
+    itemKey: 'inbound',
+    listKey: 'inbounds',
+    path: '/api/admin/inbounds',
+  },
   plans: {
     itemKey: 'plan',
     listKey: 'plans',
@@ -138,6 +145,7 @@ const toPlanPayload = (record: Partial<PlanRecord>) => ({
   allowsCustomTraffic: Boolean(record.allowsCustomTraffic),
   badge: toNullableText(record.badge),
   ctaText: String(record.ctaText ?? '').trim(),
+  currency: String(record.currency ?? 'RUB').trim().toUpperCase() || 'RUB',
   customPricePerGbRub: Boolean(record.allowsCustomTraffic)
     ? toNullableNumber(record.customPricePerGbRub)
     : null,
@@ -163,6 +171,14 @@ const toPlanPayload = (record: Partial<PlanRecord>) => ({
   speedLimitMbps: toNullableNumber(record.speedLimitMbps),
   title: String(record.title ?? '').trim(),
   trafficLimitGb: toNullableNumber(record.trafficLimitGb),
+});
+
+const toInboundPayload = (record: Partial<Inbound>) => ({
+  id: toNullableNumber(record.id) ?? 0,
+  isActive: Boolean(record.isActive),
+  name: String(record.name ?? '').trim(),
+  type: String(record.type ?? '').trim(),
+  value: String(record.value ?? '').trim(),
 });
 
 const toPromoPayload = (record: Partial<PromoCode>) => ({
@@ -322,7 +338,9 @@ const adminDataProvider = {
     const payload =
       resource === 'plans'
         ? toPlanPayload(params.data as Partial<PlanRecord>)
-        : toPromoPayload(params.data as Partial<PromoCode>);
+        : resource === 'inbounds'
+          ? toInboundPayload(params.data as Partial<Inbound>)
+          : toPromoPayload(params.data as Partial<PromoCode>);
     const response = await requestJson<Record<string, unknown>>(resourceConfig[resource].path, {
       body: JSON.stringify(payload),
       method: 'POST',
@@ -340,7 +358,9 @@ const adminDataProvider = {
     const payload =
       resource === 'plans'
         ? toPlanPayload(params.data as Partial<PlanRecord>)
-        : toPromoPayload(params.data as Partial<PromoCode>);
+        : resource === 'inbounds'
+          ? toInboundPayload(params.data as Partial<Inbound>)
+          : toPromoPayload(params.data as Partial<PromoCode>);
     const response = await requestJson<Record<string, unknown>>(
       `${resourceConfig[resource].path}/${params.id}`,
       {
@@ -421,10 +441,47 @@ const AdminDashboard = () => (
         ZeroQuest Admin
       </Typography>
       <Typography color="text.secondary" variant="body2">
-        Управление тарифами и промокодами поверх существующих серверных API.
+        Управление inbound&apos;ами, тарифами и промокодами поверх серверных API.
       </Typography>
     </CardContent>
   </Card>
+);
+
+const InboundList = () => (
+  <List resource="inbounds" sort={{ field: 'updatedAt', order: 'DESC' }}>
+    <Datagrid bulkActionButtons={false} rowClick="edit">
+      <NumberField source="id" label="ID" />
+      <TextField source="name" label="Название" />
+      <TextField source="type" label="Тип" />
+      <TextField source="value" label="Value" />
+      <BooleanField source="isActive" label="Активен" />
+      <DateField source="updatedAt" label="Обновлён" showTime />
+      <EditButton />
+      <DeleteButton mutationMode="pessimistic" />
+    </Datagrid>
+  </List>
+);
+
+const InboundForm = () => (
+  <SimpleForm>
+    <NumberInput source="id" label="Inbound ID" validate={[required(), minValue(1)]} />
+    <TextInput source="name" label="Название" validate={[required()]} />
+    <TextInput source="type" label="Тип" validate={[required()]} />
+    <TextInput source="value" label="Value" validate={[required()]} />
+    <BooleanInput source="isActive" label="Активен" />
+  </SimpleForm>
+);
+
+const InboundEdit = () => (
+  <Edit mutationMode="pessimistic" resource="inbounds">
+    <InboundForm />
+  </Edit>
+);
+
+const InboundCreate = () => (
+  <Create resource="inbounds">
+    <InboundForm />
+  </Create>
 );
 
 const PlanList = () => (
@@ -458,9 +515,17 @@ const PlanForm = () => (
       format={(value) => value ?? ''}
       parse={toNullableText}
     />
+    <SelectInput
+      source="currency"
+      label="Валюта"
+      choices={[{ id: 'RUB', name: 'RUB' }]}
+      validate={[required()]}
+    />
     <NumberInput source="priceRub" label="Цена, ₽" validate={[required(), minValue(0)]} />
     <NumberInput source="durationDays" label="Срок, дней" validate={[required(), minValue(1)]} />
-    <NumberInput source="inboundId" label="Inbound ID" validate={[required(), minValue(1)]} />
+    <ReferenceInput source="inboundId" reference="inbounds" label="Inbound">
+      <SelectInput optionText="name" validate={[required()]} />
+    </ReferenceInput>
     <NumberInput
       source="trafficLimitGb"
       label="Лимит трафика, GB"
@@ -583,6 +648,13 @@ const PromoCodeCreate = () => (
 export function AdminPage() {
   return (
     <Admin dashboard={AdminDashboard} dataProvider={adminDataProvider}>
+      <Resource
+        create={InboundCreate}
+        edit={InboundEdit}
+        list={InboundList}
+        name="inbounds"
+        options={{ label: 'Inbounds' }}
+      />
       <Resource
         create={PlanCreate}
         edit={PlanEdit}

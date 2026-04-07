@@ -1,23 +1,27 @@
 .page {
-  position: relative;
-  padding: 40px 0 104px;
+  padding: 32px 0 96px;
 }
 
-.hero {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0a0a0a;
+.hero,
+.metricCard,
+.recordCard,
+.emptyState,
+.metaCard,
+.uriBox {
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  border-radius: 32px;
 }
 
 .eyebrow {
-  color: var(--accent-strong);
-  font-size: 0.8rem;
+  color: var(--muted);
+  font-size: 0.78rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
 .heroTitle {
+  color: var(--foreground-strong);
   font-size: clamp(2.4rem, 6vw, 4.6rem);
   letter-spacing: -0.06em;
   line-height: 0.92;
@@ -28,15 +32,16 @@
   color: var(--muted);
 }
 
-.metricCard,
-.recordCard,
-.emptyState {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0a0a0a;
+.metricCard {
+  padding: 1rem;
+  background: var(--background-subtle);
 }
 
 .recordCard {
   overflow: hidden;
+  padding: 1.25rem;
+  background: var(--background-subtle);
+  border-radius: 28px;
 }
 
 .metaGrid {
@@ -44,25 +49,27 @@
 }
 
 .metaCard {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #050505;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 22px;
 }
 
 .resultCode {
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #050505;
+  color: var(--foreground-strong);
+  border: 1px solid var(--surface-border);
+  background: var(--background-subtle);
 }
 
 .uriBox {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #050505;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 24px;
 }
 
 .uriTextarea {
-  background: #050505;
-  border-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: var(--background-subtle);
+  border-color: var(--surface-border);
+  color: var(--foreground);
   font-family: var(--font-jetbrains-mono), monospace;
 }
 
@@ -70,5 +77,14 @@
   .page {
     padding-top: 20px;
     padding-bottom: 64px;
+  }
+
+  .hero,
+  .metricCard,
+  .recordCard,
+  .emptyState,
+  .metaCard,
+  .uriBox {
+    border-radius: 24px;
   }
 }

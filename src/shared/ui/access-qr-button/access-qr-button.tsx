@@ -1,8 +1,17 @@
 'use client';
 
-import { Button, Modal, Paper, Stack, Text, type ButtonProps } from '@mantine/core';
+import {
+  Button,
+  Modal,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+  type ButtonProps,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { QRCodeSVG } from 'qrcode.react';
+import { VlessLink } from '../vless-link/vless-link';
 import styles from './access-qr-button.module.css';
 
 interface AccessQrButtonProps {
@@ -30,8 +39,15 @@ export function AccessQrButton({
         centered
         onClose={close}
         opened={opened}
+        scrollAreaComponent={ScrollArea.Autosize}
         size="md"
         title="QR-код для подключения"
+        styles={{
+          body: {
+            maxHeight: 'calc(100dvh - 180px)',
+            overflowY: 'auto',
+          },
+        }}
       >
         <Stack gap="md">
           <Paper className={styles.panel} p="xl" radius="28px">
@@ -56,7 +72,7 @@ export function AccessQrButton({
               </Text>
 
               <div className={styles.valueBox}>
-                <Text className={styles.valueText}>{value}</Text>
+                <VlessLink showDeepLink value={value} />
               </div>
             </Stack>
           </Paper>

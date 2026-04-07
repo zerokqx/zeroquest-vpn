@@ -12,6 +12,7 @@ const basePlan: PublicPlan = {
   allowsCustomTraffic: false,
   badge: 'Старт',
   ctaText: 'Подключить',
+  currency: 'RUB',
   customPricePerGbRub: null,
   customTrafficMaxGb: null,
   customTrafficMinGb: null,

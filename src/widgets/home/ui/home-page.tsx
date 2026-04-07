@@ -1,7 +1,6 @@
 import {
   Badge,
   Button,
-  Center,
   Container,
   Group,
   Paper,
@@ -13,7 +12,7 @@ import {
 import Link from 'next/link';
 import type { PublicPlan } from '@/entities/plan/model/types';
 import type { User } from '@/entities/user/model/types';
-import { BlackHoleStage } from '@/shared/ui/black-hole-stage/black-hole-stage';
+import { formatMoney } from '@/shared/lib/currency';
 import styles from './home-page.module.css';
 
 interface HomePageProps {
@@ -42,8 +41,8 @@ export function HomePage({ plans, viewer }: HomePageProps) {
                 </Title>
                 <Text className={styles.heroLead} size="lg">
                   Один аккаунт, один dashboard и все подключения под рукой.
-                  Бесплатный старт закрывает сомнения, платные планы дают
-                  приватный маршрут и предсказуемый контроль по устройствам.
+                  Вы выбираете тариф, оплачиваете его через ЮKassa и только
+                  после подтверждения платежа получаете VPN-ключ в личном кабинете.
                 </Text>
               </Stack>
 
@@ -92,23 +91,19 @@ export function HomePage({ plans, viewer }: HomePageProps) {
                 <span className={styles.previewDot} />
               </Group>
 
-              <Stack gap="xl" mt="md">
-                <Center className={styles.previewBlackHole}>
-                  <BlackHoleStage />
-                </Center>
-
+              <Stack gap="md" mt="md">
                 <Stack className={styles.previewInfo} gap="sm">
                   <Stack gap={4}>
                     <span className={styles.previewLabel}>Маршрут</span>
-                    <strong>ZeroQuest Приватный</strong>
+                    <strong>ZeroQuest Private</strong>
                   </Stack>
                   <Stack gap={4}>
-                    <span className={styles.previewLabel}>Подпись</span>
-                    <strong>login / device</strong>
+                    <span className={styles.previewLabel}>Оплата</span>
+                    <strong>Только после подтверждения</strong>
                   </Stack>
                   <Stack gap={4}>
                     <span className={styles.previewLabel}>Выдача</span>
-                    <strong>сразу в dashboard</strong>
+                    <strong>В dashboard и профиле</strong>
                   </Stack>
                 </Stack>
               </Stack>
@@ -117,8 +112,8 @@ export function HomePage({ plans, viewer }: HomePageProps) {
 
           <SimpleGrid className={styles.proofList} cols={{ base: 1, md: 3 }} mt="xl">
             <Stack className={styles.proofItem} gap={4}>
-              <span className={styles.proofValue}>10 GB</span>
-              <span className={styles.proofLabel}>free-план на 30 дней для первого входа</span>
+              <span className={styles.proofValue}>30 GB</span>
+              <span className={styles.proofLabel}>стартовый платный тариф без демо-раздачи</span>
             </Stack>
             <Stack className={styles.proofItem} gap={4}>
               <span className={styles.proofValue}>250 ₽</span>
@@ -182,10 +177,8 @@ export function HomePage({ plans, viewer }: HomePageProps) {
 
                     <Text className={styles.planPrice}>
                       {plan.allowsCustomTraffic
-                        ? `от ${plan.priceRub} ₽`
-                        : plan.priceRub === 0
-                          ? '0 ₽'
-                          : `${plan.priceRub} ₽`}
+                        ? `от ${formatMoney(plan.priceRub, plan.currency)}`
+                        : formatMoney(plan.priceRub, plan.currency)}
                     </Text>
                   </Group>
 

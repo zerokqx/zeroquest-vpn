@@ -5,6 +5,7 @@ export interface Plan {
   title: string;
   description: string;
   priceRub: number;
+  currency: string;
   trafficLimitBytes: number | null;
   durationDays: number;
   speedLimitMbps: number | null;
@@ -31,6 +32,7 @@ export interface PublicPlan {
   title: string;
   description: string;
   priceRub: number;
+  currency: string;
   periodLabel: string;
   badge: string | null;
   ctaText: string;
@@ -51,6 +53,7 @@ export interface UpsertPlanInput {
   allowsCustomTraffic?: boolean;
   badge: string | null;
   ctaText: string;
+  currency: string;
   customPricePerGbRub?: number | null;
   customTrafficMaxGb?: number | null;
   customTrafficMinGb?: number | null;

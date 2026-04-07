@@ -1,149 +1,272 @@
 import { randomUUID } from 'node:crypto';
 import { decryptJson, encryptJson, getPrismaClient } from '@/shared/db/server';
-import type { AccessRecord, AccessRecordWithStatus } from '../model/types';
-
-type AccessRecordPayload = Omit<
+import type { PaymentPayload } from '@/entities/payment/model/types';
+import type {
   AccessRecord,
-  'createdAt' | 'expiresAt' | 'id' | 'planId' | 'userId'
->;
+  AccessRecordWithStatus,
+  VpnKeyRecord,
+} from '../model/types';
 
-const toAccessRecord = (row: {
-  createdAt: Date;
+interface VpnKeyPayload {
+  deviceName: string;
+  displayName: string;
+  inboundRemark: string;
+  threeXUiClientId: string;
+  threeXUiEmail: string;
+}
+
+interface EncryptedKeyValuePayload {
+  value: string;
+}
+
+const toNumber = (value: bigint | number | null): number | null => {
+  if (value === null) {
+    return null;
+  }
+
+  return typeof value === 'bigint' ? Number(value) : value;
+};
+
+const toVpnKeyRecord = (row: {
   expiresAt: Date;
   id: string;
+  inboundId: number;
+  issuedAt: Date;
+  keyValue: string;
   payload: string;
+  paymentId: string;
   planId: string;
+  revokedAt: Date | null;
+  trafficLimitBytes: bigint | number | null;
   userId: string;
-}): AccessRecord => {
-  const payload = decryptJson<AccessRecordPayload>(row.payload);
+}): VpnKeyRecord => {
+  const payload = decryptJson<VpnKeyPayload>(row.payload);
+  const keyValue = decryptJson<EncryptedKeyValuePayload>(row.keyValue);
 
   return {
-    id: row.id,
-    userId: row.userId,
-    planId: row.planId,
-    planTitle: payload.planTitle,
-    originalPriceRub: payload.originalPriceRub,
-    finalPriceRub: payload.finalPriceRub,
-    planPriceRub: payload.planPriceRub,
-    periodLabel: payload.periodLabel,
-    promoCode: payload.promoCode,
     deviceName: payload.deviceName,
     displayName: payload.displayName,
+    expiresAt: row.expiresAt.toISOString(),
+    id: row.id,
+    inboundId: row.inboundId,
+    inboundRemark: payload.inboundRemark,
+    issuedAt: row.issuedAt.toISOString(),
+    keyValue: keyValue.value,
+    paymentId: row.paymentId,
+    planId: row.planId,
+    revokedAt: row.revokedAt?.toISOString() ?? null,
     threeXUiClientId: payload.threeXUiClientId,
     threeXUiEmail: payload.threeXUiEmail,
-    inboundId: payload.inboundId,
-    inboundRemark: payload.inboundRemark,
-    accessUri: payload.accessUri,
-    createdAt: row.createdAt.toISOString(),
-    expiresAt: row.expiresAt.toISOString(),
-    trafficLimitBytes: payload.trafficLimitBytes,
-    speedLimitMbps: payload.speedLimitMbps,
+    trafficLimitBytes: toNumber(row.trafficLimitBytes),
+    userId: row.userId,
   };
 };
 
-const toAccessRecordWithStatus = (row: {
-  createdAt: Date;
+const toAccessRecord = (row: {
   expiresAt: Date;
   id: string;
+  inboundId: number;
+  issuedAt: Date;
+  keyValue: string;
   payload: string;
+  payment: {
+    amount: number;
+    payload: string;
+  };
+  paymentId: string;
   planId: string;
+  revokedAt: Date | null;
+  trafficLimitBytes: bigint | number | null;
   userId: string;
-}): AccessRecordWithStatus => {
+}): AccessRecord => {
+  const vpnKey = toVpnKeyRecord(row);
+  const payment = decryptJson<PaymentPayload>(row.payment.payload);
+
+  return {
+    accessUri: vpnKey.keyValue,
+    createdAt: vpnKey.issuedAt,
+    deviceName: vpnKey.deviceName,
+    displayName: vpnKey.displayName,
+    expiresAt: vpnKey.expiresAt,
+    finalPriceRub: payment.finalPriceRub,
+    id: vpnKey.id,
+    inboundId: vpnKey.inboundId,
+    inboundRemark: vpnKey.inboundRemark,
+    originalPriceRub: payment.originalPriceRub,
+    paymentId: row.paymentId,
+    periodLabel: payment.periodLabel,
+    planId: row.planId,
+    planPriceRub: row.payment.amount,
+    planTitle: payment.planTitle,
+    promoCode: payment.promoCode,
+    speedLimitMbps: payment.speedLimitMbps,
+    threeXUiClientId: vpnKey.threeXUiClientId,
+    threeXUiEmail: vpnKey.threeXUiEmail,
+    trafficLimitBytes: toNumber(row.trafficLimitBytes),
+    userId: row.userId,
+  };
+};
+
+const toAccessRecordWithStatus = (row: Parameters<typeof toAccessRecord>[0]): AccessRecordWithStatus => {
   const record = toAccessRecord(row);
 
   return {
     ...record,
-    isActive: new Date(record.expiresAt).getTime() > Date.now(),
+    isActive:
+      row.revokedAt === null &&
+      new Date(record.expiresAt).getTime() > Date.now(),
   };
 };
 
-export type CreateAccessRecordInput = Omit<AccessRecord, 'id' | 'createdAt'>;
+export interface CreateVpnKeyInput {
+  deviceName: string;
+  displayName: string;
+  expiresAt: string;
+  inboundId: number;
+  inboundRemark: string;
+  keyValue: string;
+  paymentId: string;
+  planId: string;
+  threeXUiClientId: string;
+  threeXUiEmail: string;
+  trafficLimitBytes: number | null;
+  userId: string;
+}
 
 export const listAccessRecordsByUserId = async (
   userId: string
-): Promise<AccessRecord[]> => {
-  return (await getPrismaClient().accessRecordStore.findMany({
+): Promise<AccessRecord[]> =>
+  (await getPrismaClient().vpnKeyStore.findMany({
     where: {
+      revokedAt: null,
       userId,
     },
+    include: {
+      payment: {
+        select: {
+          amount: true,
+          payload: true,
+        },
+      },
+    },
     orderBy: {
-      createdAt: 'desc',
+      issuedAt: 'desc',
     },
   })).map(toAccessRecord);
-};
 
 export const listAccessRecordsWithStatusByUserId = async (
   userId: string
-): Promise<AccessRecordWithStatus[]> => {
-  return (await getPrismaClient().accessRecordStore.findMany({
+): Promise<AccessRecordWithStatus[]> =>
+  (await getPrismaClient().vpnKeyStore.findMany({
     where: {
+      revokedAt: null,
       userId,
     },
+    include: {
+      payment: {
+        select: {
+          amount: true,
+          payload: true,
+        },
+      },
+    },
     orderBy: {
-      createdAt: 'desc',
+      issuedAt: 'desc',
     },
   })).map(toAccessRecordWithStatus);
-};
 
-export const createAccessRecord = async (
-  input: CreateAccessRecordInput
-): Promise<AccessRecord> => {
-  const prisma = getPrismaClient();
-  const accessRecordId = randomUUID();
-  const now = new Date().toISOString();
+export const createVpnKey = async (
+  input: CreateVpnKeyInput
+): Promise<VpnKeyRecord> => {
+  const vpnKeyId = randomUUID();
+  const issuedAt = new Date();
 
-  await prisma.accessRecordStore.create({
+  await getPrismaClient().vpnKeyStore.create({
     data: {
-      createdAt: new Date(now),
       expiresAt: new Date(input.expiresAt),
-      id: accessRecordId,
+      id: vpnKeyId,
+      inboundId: input.inboundId,
+      issuedAt,
+      keyValue: encryptJson({
+        value: input.keyValue,
+      }),
       payload: encryptJson({
-        planTitle: input.planTitle,
-        originalPriceRub: input.originalPriceRub,
-        finalPriceRub: input.finalPriceRub,
-        planPriceRub: input.planPriceRub,
-        periodLabel: input.periodLabel,
-        promoCode: input.promoCode,
         deviceName: input.deviceName,
         displayName: input.displayName,
+        inboundRemark: input.inboundRemark,
         threeXUiClientId: input.threeXUiClientId,
         threeXUiEmail: input.threeXUiEmail,
-        inboundId: input.inboundId,
-        inboundRemark: input.inboundRemark,
-        accessUri: input.accessUri,
-        trafficLimitBytes: input.trafficLimitBytes,
-        speedLimitMbps: input.speedLimitMbps,
       }),
+      paymentId: input.paymentId,
       planId: input.planId,
+      trafficLimitBytes:
+        input.trafficLimitBytes === null ? null : BigInt(input.trafficLimitBytes),
       userId: input.userId,
     },
   });
 
-  return (await getAccessRecordByIdForUser(accessRecordId, input.userId)) as AccessRecord;
+  return (await getVpnKeyById(vpnKeyId)) as VpnKeyRecord;
+};
+
+export const getVpnKeyById = async (
+  vpnKeyId: string
+): Promise<VpnKeyRecord | null> => {
+  const row = await getPrismaClient().vpnKeyStore.findUnique({
+    where: {
+      id: vpnKeyId,
+    },
+  });
+
+  return row ? toVpnKeyRecord(row) : null;
+};
+
+export const getVpnKeyByPaymentId = async (
+  paymentId: string
+): Promise<VpnKeyRecord | null> => {
+  const row = await getPrismaClient().vpnKeyStore.findUnique({
+    where: {
+      paymentId,
+    },
+  });
+
+  return row ? toVpnKeyRecord(row) : null;
 };
 
 export const getAccessRecordByIdForUser = async (
   accessRecordId: string,
   userId: string
 ): Promise<AccessRecord | null> => {
-  const row = await getPrismaClient().accessRecordStore.findFirst({
+  const row = await getPrismaClient().vpnKeyStore.findFirst({
     where: {
       id: accessRecordId,
+      revokedAt: null,
       userId,
+    },
+    include: {
+      payment: {
+        select: {
+          amount: true,
+          payload: true,
+        },
+      },
     },
   });
 
   return row ? toAccessRecord(row) : null;
 };
 
-export const deleteAccessRecordByIdForUser = async (
+export const revokeVpnKeyByIdForUser = async (
   accessRecordId: string,
   userId: string
 ): Promise<void> => {
-  await getPrismaClient().accessRecordStore.deleteMany({
+  await getPrismaClient().vpnKeyStore.updateMany({
     where: {
       id: accessRecordId,
+      revokedAt: null,
       userId,
+    },
+    data: {
+      revokedAt: new Date(),
     },
   });
 };

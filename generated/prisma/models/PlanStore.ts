@@ -27,19 +27,47 @@ export type AggregatePlanStore = {
 }
 
 export type PlanStoreAvgAggregateOutputType = {
+  priceRub: number | null
+  trafficLimitBytes: number | null
+  durationDays: number | null
+  speedLimitMbps: number | null
+  customPricePerGbRub: number | null
+  customTrafficMaxGb: number | null
+  customTrafficMinGb: number | null
   sortOrder: number | null
 }
 
 export type PlanStoreSumAggregateOutputType = {
+  priceRub: number | null
+  trafficLimitBytes: bigint | null
+  durationDays: number | null
+  speedLimitMbps: number | null
+  customPricePerGbRub: number | null
+  customTrafficMaxGb: number | null
+  customTrafficMinGb: number | null
   sortOrder: number | null
 }
 
 export type PlanStoreMinAggregateOutputType = {
   id: string | null
   slug: string | null
+  title: string | null
+  description: string | null
+  priceRub: number | null
+  currency: string | null
+  trafficLimitBytes: bigint | null
+  durationDays: number | null
+  speedLimitMbps: number | null
+  allowsCustomTraffic: boolean | null
   isActive: boolean | null
+  isFeatured: boolean | null
+  badge: string | null
+  ctaText: string | null
+  customPricePerGbRub: number | null
+  customTrafficMaxGb: number | null
+  customTrafficMinGb: number | null
+  highlight: string | null
   sortOrder: number | null
-  payload: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,9 +75,23 @@ export type PlanStoreMinAggregateOutputType = {
 export type PlanStoreMaxAggregateOutputType = {
   id: string | null
   slug: string | null
+  title: string | null
+  description: string | null
+  priceRub: number | null
+  currency: string | null
+  trafficLimitBytes: bigint | null
+  durationDays: number | null
+  speedLimitMbps: number | null
+  allowsCustomTraffic: boolean | null
   isActive: boolean | null
+  isFeatured: boolean | null
+  badge: string | null
+  ctaText: string | null
+  customPricePerGbRub: number | null
+  customTrafficMaxGb: number | null
+  customTrafficMinGb: number | null
+  highlight: string | null
   sortOrder: number | null
-  payload: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -57,9 +99,24 @@ export type PlanStoreMaxAggregateOutputType = {
 export type PlanStoreCountAggregateOutputType = {
   id: number
   slug: number
+  title: number
+  description: number
+  priceRub: number
+  currency: number
+  features: number
+  trafficLimitBytes: number
+  durationDays: number
+  speedLimitMbps: number
+  allowsCustomTraffic: number
   isActive: number
+  isFeatured: number
+  badge: number
+  ctaText: number
+  customPricePerGbRub: number
+  customTrafficMaxGb: number
+  customTrafficMinGb: number
+  highlight: number
   sortOrder: number
-  payload: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -67,19 +124,47 @@ export type PlanStoreCountAggregateOutputType = {
 
 
 export type PlanStoreAvgAggregateInputType = {
+  priceRub?: true
+  trafficLimitBytes?: true
+  durationDays?: true
+  speedLimitMbps?: true
+  customPricePerGbRub?: true
+  customTrafficMaxGb?: true
+  customTrafficMinGb?: true
   sortOrder?: true
 }
 
 export type PlanStoreSumAggregateInputType = {
+  priceRub?: true
+  trafficLimitBytes?: true
+  durationDays?: true
+  speedLimitMbps?: true
+  customPricePerGbRub?: true
+  customTrafficMaxGb?: true
+  customTrafficMinGb?: true
   sortOrder?: true
 }
 
 export type PlanStoreMinAggregateInputType = {
   id?: true
   slug?: true
+  title?: true
+  description?: true
+  priceRub?: true
+  currency?: true
+  trafficLimitBytes?: true
+  durationDays?: true
+  speedLimitMbps?: true
+  allowsCustomTraffic?: true
   isActive?: true
+  isFeatured?: true
+  badge?: true
+  ctaText?: true
+  customPricePerGbRub?: true
+  customTrafficMaxGb?: true
+  customTrafficMinGb?: true
+  highlight?: true
   sortOrder?: true
-  payload?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,9 +172,23 @@ export type PlanStoreMinAggregateInputType = {
 export type PlanStoreMaxAggregateInputType = {
   id?: true
   slug?: true
+  title?: true
+  description?: true
+  priceRub?: true
+  currency?: true
+  trafficLimitBytes?: true
+  durationDays?: true
+  speedLimitMbps?: true
+  allowsCustomTraffic?: true
   isActive?: true
+  isFeatured?: true
+  badge?: true
+  ctaText?: true
+  customPricePerGbRub?: true
+  customTrafficMaxGb?: true
+  customTrafficMinGb?: true
+  highlight?: true
   sortOrder?: true
-  payload?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,9 +196,24 @@ export type PlanStoreMaxAggregateInputType = {
 export type PlanStoreCountAggregateInputType = {
   id?: true
   slug?: true
+  title?: true
+  description?: true
+  priceRub?: true
+  currency?: true
+  features?: true
+  trafficLimitBytes?: true
+  durationDays?: true
+  speedLimitMbps?: true
+  allowsCustomTraffic?: true
   isActive?: true
+  isFeatured?: true
+  badge?: true
+  ctaText?: true
+  customPricePerGbRub?: true
+  customTrafficMaxGb?: true
+  customTrafficMinGb?: true
+  highlight?: true
   sortOrder?: true
-  payload?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -194,9 +308,24 @@ export type PlanStoreGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type PlanStoreGroupByOutputType = {
   id: string
   slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features: string[]
+  trafficLimitBytes: bigint | null
+  durationDays: number
+  speedLimitMbps: number | null
+  allowsCustomTraffic: boolean
   isActive: boolean
+  isFeatured: boolean
+  badge: string | null
+  ctaText: string
+  customPricePerGbRub: number | null
+  customTrafficMaxGb: number | null
+  customTrafficMinGb: number | null
+  highlight: string | null
   sortOrder: number
-  payload: string
   createdAt: Date
   updatedAt: Date
   _count: PlanStoreCountAggregateOutputType | null
@@ -227,21 +356,57 @@ export type PlanStoreWhereInput = {
   NOT?: Prisma.PlanStoreWhereInput | Prisma.PlanStoreWhereInput[]
   id?: Prisma.StringFilter<"PlanStore"> | string
   slug?: Prisma.StringFilter<"PlanStore"> | string
+  title?: Prisma.StringFilter<"PlanStore"> | string
+  description?: Prisma.StringFilter<"PlanStore"> | string
+  priceRub?: Prisma.IntFilter<"PlanStore"> | number
+  currency?: Prisma.StringFilter<"PlanStore"> | string
+  features?: Prisma.StringNullableListFilter<"PlanStore">
+  trafficLimitBytes?: Prisma.BigIntNullableFilter<"PlanStore"> | bigint | number | null
+  durationDays?: Prisma.IntFilter<"PlanStore"> | number
+  speedLimitMbps?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  allowsCustomTraffic?: Prisma.BoolFilter<"PlanStore"> | boolean
   isActive?: Prisma.BoolFilter<"PlanStore"> | boolean
+  isFeatured?: Prisma.BoolFilter<"PlanStore"> | boolean
+  badge?: Prisma.StringNullableFilter<"PlanStore"> | string | null
+  ctaText?: Prisma.StringFilter<"PlanStore"> | string
+  customPricePerGbRub?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  customTrafficMaxGb?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  customTrafficMinGb?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  highlight?: Prisma.StringNullableFilter<"PlanStore"> | string | null
   sortOrder?: Prisma.IntFilter<"PlanStore"> | number
-  payload?: Prisma.StringFilter<"PlanStore"> | string
   createdAt?: Prisma.DateTimeFilter<"PlanStore"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStore"> | Date | string
+  payments?: Prisma.PaymentStoreListRelationFilter
+  planInbounds?: Prisma.PlanInboundStoreListRelationFilter
+  vpnKeys?: Prisma.VpnKeyStoreListRelationFilter
 }
 
 export type PlanStoreOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  priceRub?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  features?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrderInput | Prisma.SortOrder
+  allowsCustomTraffic?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
+  badge?: Prisma.SortOrderInput | Prisma.SortOrder
+  ctaText?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrderInput | Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrderInput | Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrderInput | Prisma.SortOrder
+  highlight?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  payments?: Prisma.PaymentStoreOrderByRelationAggregateInput
+  planInbounds?: Prisma.PlanInboundStoreOrderByRelationAggregateInput
+  vpnKeys?: Prisma.VpnKeyStoreOrderByRelationAggregateInput
 }
 
 export type PlanStoreWhereUniqueInput = Prisma.AtLeast<{
@@ -250,19 +415,52 @@ export type PlanStoreWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PlanStoreWhereInput | Prisma.PlanStoreWhereInput[]
   OR?: Prisma.PlanStoreWhereInput[]
   NOT?: Prisma.PlanStoreWhereInput | Prisma.PlanStoreWhereInput[]
+  title?: Prisma.StringFilter<"PlanStore"> | string
+  description?: Prisma.StringFilter<"PlanStore"> | string
+  priceRub?: Prisma.IntFilter<"PlanStore"> | number
+  currency?: Prisma.StringFilter<"PlanStore"> | string
+  features?: Prisma.StringNullableListFilter<"PlanStore">
+  trafficLimitBytes?: Prisma.BigIntNullableFilter<"PlanStore"> | bigint | number | null
+  durationDays?: Prisma.IntFilter<"PlanStore"> | number
+  speedLimitMbps?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  allowsCustomTraffic?: Prisma.BoolFilter<"PlanStore"> | boolean
   isActive?: Prisma.BoolFilter<"PlanStore"> | boolean
+  isFeatured?: Prisma.BoolFilter<"PlanStore"> | boolean
+  badge?: Prisma.StringNullableFilter<"PlanStore"> | string | null
+  ctaText?: Prisma.StringFilter<"PlanStore"> | string
+  customPricePerGbRub?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  customTrafficMaxGb?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  customTrafficMinGb?: Prisma.IntNullableFilter<"PlanStore"> | number | null
+  highlight?: Prisma.StringNullableFilter<"PlanStore"> | string | null
   sortOrder?: Prisma.IntFilter<"PlanStore"> | number
-  payload?: Prisma.StringFilter<"PlanStore"> | string
   createdAt?: Prisma.DateTimeFilter<"PlanStore"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStore"> | Date | string
+  payments?: Prisma.PaymentStoreListRelationFilter
+  planInbounds?: Prisma.PlanInboundStoreListRelationFilter
+  vpnKeys?: Prisma.VpnKeyStoreListRelationFilter
 }, "id" | "slug">
 
 export type PlanStoreOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  priceRub?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  features?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrderInput | Prisma.SortOrder
+  allowsCustomTraffic?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
+  badge?: Prisma.SortOrderInput | Prisma.SortOrder
+  ctaText?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrderInput | Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrderInput | Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrderInput | Prisma.SortOrder
+  highlight?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlanStoreCountOrderByAggregateInput
@@ -278,9 +476,24 @@ export type PlanStoreScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PlanStoreScalarWhereWithAggregatesInput | Prisma.PlanStoreScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
   slug?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
+  title?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
+  description?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
+  priceRub?: Prisma.IntWithAggregatesFilter<"PlanStore"> | number
+  currency?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
+  features?: Prisma.StringNullableListFilter<"PlanStore">
+  trafficLimitBytes?: Prisma.BigIntNullableWithAggregatesFilter<"PlanStore"> | bigint | number | null
+  durationDays?: Prisma.IntWithAggregatesFilter<"PlanStore"> | number
+  speedLimitMbps?: Prisma.IntNullableWithAggregatesFilter<"PlanStore"> | number | null
+  allowsCustomTraffic?: Prisma.BoolWithAggregatesFilter<"PlanStore"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"PlanStore"> | boolean
+  isFeatured?: Prisma.BoolWithAggregatesFilter<"PlanStore"> | boolean
+  badge?: Prisma.StringNullableWithAggregatesFilter<"PlanStore"> | string | null
+  ctaText?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
+  customPricePerGbRub?: Prisma.IntNullableWithAggregatesFilter<"PlanStore"> | number | null
+  customTrafficMaxGb?: Prisma.IntNullableWithAggregatesFilter<"PlanStore"> | number | null
+  customTrafficMinGb?: Prisma.IntNullableWithAggregatesFilter<"PlanStore"> | number | null
+  highlight?: Prisma.StringNullableWithAggregatesFilter<"PlanStore"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"PlanStore"> | number
-  payload?: Prisma.StringWithAggregatesFilter<"PlanStore"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlanStore"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlanStore"> | Date | string
 }
@@ -288,49 +501,136 @@ export type PlanStoreScalarWhereWithAggregatesInput = {
 export type PlanStoreCreateInput = {
   id: string
   slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
   isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
   sortOrder: number
-  payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutPlanInput
+  planInbounds?: Prisma.PlanInboundStoreCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutPlanInput
 }
 
 export type PlanStoreUncheckedCreateInput = {
   id: string
   slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
   isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
   sortOrder: number
-  payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutPlanInput
+  planInbounds?: Prisma.PlanInboundStoreUncheckedCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanStoreUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutPlanNestedInput
+  planInbounds?: Prisma.PlanInboundStoreUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanStoreUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutPlanNestedInput
+  planInbounds?: Prisma.PlanInboundStoreUncheckedUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanStoreCreateManyInput = {
   id: string
   slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
   isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
   sortOrder: number
-  payload: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -338,9 +638,24 @@ export type PlanStoreCreateManyInput = {
 export type PlanStoreUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -348,33 +663,92 @@ export type PlanStoreUpdateManyMutationInput = {
 export type PlanStoreUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  payload?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type PlanStoreCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  priceRub?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  features?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrder
+  allowsCustomTraffic?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
+  ctaText?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrder
+  highlight?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type PlanStoreAvgOrderByAggregateInput = {
+  priceRub?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
 export type PlanStoreMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  priceRub?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrder
+  allowsCustomTraffic?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
+  ctaText?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrder
+  highlight?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -382,19 +756,45 @@ export type PlanStoreMaxOrderByAggregateInput = {
 export type PlanStoreMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  priceRub?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrder
+  allowsCustomTraffic?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
+  ctaText?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrder
+  highlight?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  payload?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type PlanStoreSumOrderByAggregateInput = {
+  priceRub?: Prisma.SortOrder
+  trafficLimitBytes?: Prisma.SortOrder
+  durationDays?: Prisma.SortOrder
+  speedLimitMbps?: Prisma.SortOrder
+  customPricePerGbRub?: Prisma.SortOrder
+  customTrafficMaxGb?: Prisma.SortOrder
+  customTrafficMinGb?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type PlanStoreScalarRelationFilter = {
+  is?: Prisma.PlanStoreWhereInput
+  isNot?: Prisma.PlanStoreWhereInput
+}
+
+export type PlanStoreCreatefeaturesInput = {
+  set: string[]
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -405,24 +805,548 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type PlanStoreUpdatefeaturesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type NullableBigIntFieldUpdateOperationsInput = {
+  set?: bigint | number | null
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type PlanStoreCreateNestedOneWithoutPlanInboundsInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedCreateWithoutPlanInboundsInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutPlanInboundsInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+}
+
+export type PlanStoreUpdateOneRequiredWithoutPlanInboundsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedCreateWithoutPlanInboundsInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutPlanInboundsInput
+  upsert?: Prisma.PlanStoreUpsertWithoutPlanInboundsInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanStoreUpdateToOneWithWhereWithoutPlanInboundsInput, Prisma.PlanStoreUpdateWithoutPlanInboundsInput>, Prisma.PlanStoreUncheckedUpdateWithoutPlanInboundsInput>
+}
+
+export type PlanStoreCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutPaymentsInput, Prisma.PlanStoreUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+}
+
+export type PlanStoreUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutPaymentsInput, Prisma.PlanStoreUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.PlanStoreUpsertWithoutPaymentsInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanStoreUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PlanStoreUpdateWithoutPaymentsInput>, Prisma.PlanStoreUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type PlanStoreCreateNestedOneWithoutVpnKeysInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedCreateWithoutVpnKeysInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutVpnKeysInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+}
+
+export type PlanStoreUpdateOneRequiredWithoutVpnKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStoreCreateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedCreateWithoutVpnKeysInput>
+  connectOrCreate?: Prisma.PlanStoreCreateOrConnectWithoutVpnKeysInput
+  upsert?: Prisma.PlanStoreUpsertWithoutVpnKeysInput
+  connect?: Prisma.PlanStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanStoreUpdateToOneWithWhereWithoutVpnKeysInput, Prisma.PlanStoreUpdateWithoutVpnKeysInput>, Prisma.PlanStoreUncheckedUpdateWithoutVpnKeysInput>
+}
+
+export type PlanStoreCreateWithoutPlanInboundsInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreUncheckedCreateWithoutPlanInboundsInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreCreateOrConnectWithoutPlanInboundsInput = {
+  where: Prisma.PlanStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedCreateWithoutPlanInboundsInput>
+}
+
+export type PlanStoreUpsertWithoutPlanInboundsInput = {
+  update: Prisma.XOR<Prisma.PlanStoreUpdateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedUpdateWithoutPlanInboundsInput>
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedCreateWithoutPlanInboundsInput>
+  where?: Prisma.PlanStoreWhereInput
+}
+
+export type PlanStoreUpdateToOneWithWhereWithoutPlanInboundsInput = {
+  where?: Prisma.PlanStoreWhereInput
+  data: Prisma.XOR<Prisma.PlanStoreUpdateWithoutPlanInboundsInput, Prisma.PlanStoreUncheckedUpdateWithoutPlanInboundsInput>
+}
+
+export type PlanStoreUpdateWithoutPlanInboundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanStoreUncheckedUpdateWithoutPlanInboundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanStoreCreateWithoutPaymentsInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  planInbounds?: Prisma.PlanInboundStoreCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreUncheckedCreateWithoutPaymentsInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  planInbounds?: Prisma.PlanInboundStoreUncheckedCreateNestedManyWithoutPlanInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.PlanStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutPaymentsInput, Prisma.PlanStoreUncheckedCreateWithoutPaymentsInput>
+}
+
+export type PlanStoreUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.PlanStoreUpdateWithoutPaymentsInput, Prisma.PlanStoreUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutPaymentsInput, Prisma.PlanStoreUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.PlanStoreWhereInput
+}
+
+export type PlanStoreUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.PlanStoreWhereInput
+  data: Prisma.XOR<Prisma.PlanStoreUpdateWithoutPaymentsInput, Prisma.PlanStoreUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type PlanStoreUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  planInbounds?: Prisma.PlanInboundStoreUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanStoreUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  planInbounds?: Prisma.PlanInboundStoreUncheckedUpdateManyWithoutPlanNestedInput
+  vpnKeys?: Prisma.VpnKeyStoreUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanStoreCreateWithoutVpnKeysInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreCreateNestedManyWithoutPlanInput
+  planInbounds?: Prisma.PlanInboundStoreCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreUncheckedCreateWithoutVpnKeysInput = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  priceRub: number
+  currency: string
+  features?: Prisma.PlanStoreCreatefeaturesInput | string[]
+  trafficLimitBytes?: bigint | number | null
+  durationDays: number
+  speedLimitMbps?: number | null
+  allowsCustomTraffic?: boolean
+  isActive: boolean
+  isFeatured?: boolean
+  badge?: string | null
+  ctaText: string
+  customPricePerGbRub?: number | null
+  customTrafficMaxGb?: number | null
+  customTrafficMinGb?: number | null
+  highlight?: string | null
+  sortOrder: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentStoreUncheckedCreateNestedManyWithoutPlanInput
+  planInbounds?: Prisma.PlanInboundStoreUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type PlanStoreCreateOrConnectWithoutVpnKeysInput = {
+  where: Prisma.PlanStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedCreateWithoutVpnKeysInput>
+}
+
+export type PlanStoreUpsertWithoutVpnKeysInput = {
+  update: Prisma.XOR<Prisma.PlanStoreUpdateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedUpdateWithoutVpnKeysInput>
+  create: Prisma.XOR<Prisma.PlanStoreCreateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedCreateWithoutVpnKeysInput>
+  where?: Prisma.PlanStoreWhereInput
+}
+
+export type PlanStoreUpdateToOneWithWhereWithoutVpnKeysInput = {
+  where?: Prisma.PlanStoreWhereInput
+  data: Prisma.XOR<Prisma.PlanStoreUpdateWithoutVpnKeysInput, Prisma.PlanStoreUncheckedUpdateWithoutVpnKeysInput>
+}
+
+export type PlanStoreUpdateWithoutVpnKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUpdateManyWithoutPlanNestedInput
+  planInbounds?: Prisma.PlanInboundStoreUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanStoreUncheckedUpdateWithoutVpnKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  priceRub?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  features?: Prisma.PlanStoreUpdatefeaturesInput | string[]
+  trafficLimitBytes?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  durationDays?: Prisma.IntFieldUpdateOperationsInput | number
+  speedLimitMbps?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  allowsCustomTraffic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaText?: Prisma.StringFieldUpdateOperationsInput | string
+  customPricePerGbRub?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMaxGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  customTrafficMinGb?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  highlight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentStoreUncheckedUpdateManyWithoutPlanNestedInput
+  planInbounds?: Prisma.PlanInboundStoreUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+
+/**
+ * Count Type PlanStoreCountOutputType
+ */
+
+export type PlanStoreCountOutputType = {
+  payments: number
+  planInbounds: number
+  vpnKeys: number
+}
+
+export type PlanStoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  payments?: boolean | PlanStoreCountOutputTypeCountPaymentsArgs
+  planInbounds?: boolean | PlanStoreCountOutputTypeCountPlanInboundsArgs
+  vpnKeys?: boolean | PlanStoreCountOutputTypeCountVpnKeysArgs
+}
+
+/**
+ * PlanStoreCountOutputType without action
+ */
+export type PlanStoreCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanStoreCountOutputType
+   */
+  select?: Prisma.PlanStoreCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlanStoreCountOutputType without action
+ */
+export type PlanStoreCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentStoreWhereInput
+}
+
+/**
+ * PlanStoreCountOutputType without action
+ */
+export type PlanStoreCountOutputTypeCountPlanInboundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanInboundStoreWhereInput
+}
+
+/**
+ * PlanStoreCountOutputType without action
+ */
+export type PlanStoreCountOutputTypeCountVpnKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VpnKeyStoreWhereInput
+}
 
 
 export type PlanStoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  title?: boolean
+  description?: boolean
+  priceRub?: boolean
+  currency?: boolean
+  features?: boolean
+  trafficLimitBytes?: boolean
+  durationDays?: boolean
+  speedLimitMbps?: boolean
+  allowsCustomTraffic?: boolean
   isActive?: boolean
+  isFeatured?: boolean
+  badge?: boolean
+  ctaText?: boolean
+  customPricePerGbRub?: boolean
+  customTrafficMaxGb?: boolean
+  customTrafficMinGb?: boolean
+  highlight?: boolean
   sortOrder?: boolean
-  payload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  payments?: boolean | Prisma.PlanStore$paymentsArgs<ExtArgs>
+  planInbounds?: boolean | Prisma.PlanStore$planInboundsArgs<ExtArgs>
+  vpnKeys?: boolean | Prisma.PlanStore$vpnKeysArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanStoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["planStore"]>
 
 export type PlanStoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  title?: boolean
+  description?: boolean
+  priceRub?: boolean
+  currency?: boolean
+  features?: boolean
+  trafficLimitBytes?: boolean
+  durationDays?: boolean
+  speedLimitMbps?: boolean
+  allowsCustomTraffic?: boolean
   isActive?: boolean
+  isFeatured?: boolean
+  badge?: boolean
+  ctaText?: boolean
+  customPricePerGbRub?: boolean
+  customTrafficMaxGb?: boolean
+  customTrafficMinGb?: boolean
+  highlight?: boolean
   sortOrder?: boolean
-  payload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["planStore"]>
@@ -430,9 +1354,24 @@ export type PlanStoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type PlanStoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  title?: boolean
+  description?: boolean
+  priceRub?: boolean
+  currency?: boolean
+  features?: boolean
+  trafficLimitBytes?: boolean
+  durationDays?: boolean
+  speedLimitMbps?: boolean
+  allowsCustomTraffic?: boolean
   isActive?: boolean
+  isFeatured?: boolean
+  badge?: boolean
+  ctaText?: boolean
+  customPricePerGbRub?: boolean
+  customTrafficMaxGb?: boolean
+  customTrafficMinGb?: boolean
+  highlight?: boolean
   sortOrder?: boolean
-  payload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["planStore"]>
@@ -440,24 +1379,66 @@ export type PlanStoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type PlanStoreSelectScalar = {
   id?: boolean
   slug?: boolean
+  title?: boolean
+  description?: boolean
+  priceRub?: boolean
+  currency?: boolean
+  features?: boolean
+  trafficLimitBytes?: boolean
+  durationDays?: boolean
+  speedLimitMbps?: boolean
+  allowsCustomTraffic?: boolean
   isActive?: boolean
+  isFeatured?: boolean
+  badge?: boolean
+  ctaText?: boolean
+  customPricePerGbRub?: boolean
+  customTrafficMaxGb?: boolean
+  customTrafficMinGb?: boolean
+  highlight?: boolean
   sortOrder?: boolean
-  payload?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlanStoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "isActive" | "sortOrder" | "payload" | "createdAt" | "updatedAt", ExtArgs["result"]["planStore"]>
+export type PlanStoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "description" | "priceRub" | "currency" | "features" | "trafficLimitBytes" | "durationDays" | "speedLimitMbps" | "allowsCustomTraffic" | "isActive" | "isFeatured" | "badge" | "ctaText" | "customPricePerGbRub" | "customTrafficMaxGb" | "customTrafficMinGb" | "highlight" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["planStore"]>
+export type PlanStoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  payments?: boolean | Prisma.PlanStore$paymentsArgs<ExtArgs>
+  planInbounds?: boolean | Prisma.PlanStore$planInboundsArgs<ExtArgs>
+  vpnKeys?: boolean | Prisma.PlanStore$vpnKeysArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanStoreCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type PlanStoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PlanStoreIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $PlanStorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PlanStore"
-  objects: {}
+  objects: {
+    payments: Prisma.$PaymentStorePayload<ExtArgs>[]
+    planInbounds: Prisma.$PlanInboundStorePayload<ExtArgs>[]
+    vpnKeys: Prisma.$VpnKeyStorePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     slug: string
+    title: string
+    description: string
+    priceRub: number
+    currency: string
+    features: string[]
+    trafficLimitBytes: bigint | null
+    durationDays: number
+    speedLimitMbps: number | null
+    allowsCustomTraffic: boolean
     isActive: boolean
+    isFeatured: boolean
+    badge: string | null
+    ctaText: string
+    customPricePerGbRub: number | null
+    customTrafficMaxGb: number | null
+    customTrafficMinGb: number | null
+    highlight: string | null
     sortOrder: number
-    payload: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["planStore"]>
@@ -854,6 +1835,9 @@ readonly fields: PlanStoreFieldRefs;
  */
 export interface Prisma__PlanStoreClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  payments<T extends Prisma.PlanStore$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanStore$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  planInbounds<T extends Prisma.PlanStore$planInboundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanStore$planInboundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanInboundStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  vpnKeys<T extends Prisma.PlanStore$vpnKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanStore$vpnKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VpnKeyStorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -885,9 +1869,24 @@ export interface Prisma__PlanStoreClient<T, Null = never, ExtArgs extends runtim
 export interface PlanStoreFieldRefs {
   readonly id: Prisma.FieldRef<"PlanStore", 'String'>
   readonly slug: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly title: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly description: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly priceRub: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly currency: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly features: Prisma.FieldRef<"PlanStore", 'String[]'>
+  readonly trafficLimitBytes: Prisma.FieldRef<"PlanStore", 'BigInt'>
+  readonly durationDays: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly speedLimitMbps: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly allowsCustomTraffic: Prisma.FieldRef<"PlanStore", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"PlanStore", 'Boolean'>
+  readonly isFeatured: Prisma.FieldRef<"PlanStore", 'Boolean'>
+  readonly badge: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly ctaText: Prisma.FieldRef<"PlanStore", 'String'>
+  readonly customPricePerGbRub: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly customTrafficMaxGb: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly customTrafficMinGb: Prisma.FieldRef<"PlanStore", 'Int'>
+  readonly highlight: Prisma.FieldRef<"PlanStore", 'String'>
   readonly sortOrder: Prisma.FieldRef<"PlanStore", 'Int'>
-  readonly payload: Prisma.FieldRef<"PlanStore", 'String'>
   readonly createdAt: Prisma.FieldRef<"PlanStore", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PlanStore", 'DateTime'>
 }
@@ -907,6 +1906,10 @@ export type PlanStoreFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * Filter, which PlanStore to fetch.
    */
   where: Prisma.PlanStoreWhereUniqueInput
@@ -925,6 +1928,10 @@ export type PlanStoreFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * Filter, which PlanStore to fetch.
    */
   where: Prisma.PlanStoreWhereUniqueInput
@@ -942,6 +1949,10 @@ export type PlanStoreFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the PlanStore
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
   /**
    * Filter, which PlanStore to fetch.
    */
@@ -991,6 +2002,10 @@ export type PlanStoreFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * Filter, which PlanStore to fetch.
    */
   where?: Prisma.PlanStoreWhereInput
@@ -1038,6 +2053,10 @@ export type PlanStoreFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the PlanStore
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
   /**
    * Filter, which PlanStores to fetch.
    */
@@ -1087,6 +2106,10 @@ export type PlanStoreCreateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * The data needed to create a PlanStore.
    */
   data: Prisma.XOR<Prisma.PlanStoreCreateInput, Prisma.PlanStoreUncheckedCreateInput>
@@ -1134,6 +2157,10 @@ export type PlanStoreUpdateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the PlanStore
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
   /**
    * The data needed to update a PlanStore.
    */
@@ -1201,6 +2228,10 @@ export type PlanStoreUpsertArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * The filter to search for the PlanStore to update in case it exists.
    */
   where: Prisma.PlanStoreWhereUniqueInput
@@ -1227,6 +2258,10 @@ export type PlanStoreDeleteArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
+  /**
    * Filter which PlanStore to delete.
    */
   where: Prisma.PlanStoreWhereUniqueInput
@@ -1247,6 +2282,78 @@ export type PlanStoreDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * PlanStore.payments
+ */
+export type PlanStore$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentStore
+   */
+  select?: Prisma.PaymentStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentStore
+   */
+  omit?: Prisma.PaymentStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentStoreInclude<ExtArgs> | null
+  where?: Prisma.PaymentStoreWhereInput
+  orderBy?: Prisma.PaymentStoreOrderByWithRelationInput | Prisma.PaymentStoreOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentStoreScalarFieldEnum | Prisma.PaymentStoreScalarFieldEnum[]
+}
+
+/**
+ * PlanStore.planInbounds
+ */
+export type PlanStore$planInboundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanInboundStore
+   */
+  select?: Prisma.PlanInboundStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlanInboundStore
+   */
+  omit?: Prisma.PlanInboundStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInboundStoreInclude<ExtArgs> | null
+  where?: Prisma.PlanInboundStoreWhereInput
+  orderBy?: Prisma.PlanInboundStoreOrderByWithRelationInput | Prisma.PlanInboundStoreOrderByWithRelationInput[]
+  cursor?: Prisma.PlanInboundStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlanInboundStoreScalarFieldEnum | Prisma.PlanInboundStoreScalarFieldEnum[]
+}
+
+/**
+ * PlanStore.vpnKeys
+ */
+export type PlanStore$vpnKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VpnKeyStore
+   */
+  select?: Prisma.VpnKeyStoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VpnKeyStore
+   */
+  omit?: Prisma.VpnKeyStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VpnKeyStoreInclude<ExtArgs> | null
+  where?: Prisma.VpnKeyStoreWhereInput
+  orderBy?: Prisma.VpnKeyStoreOrderByWithRelationInput | Prisma.VpnKeyStoreOrderByWithRelationInput[]
+  cursor?: Prisma.VpnKeyStoreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VpnKeyStoreScalarFieldEnum | Prisma.VpnKeyStoreScalarFieldEnum[]
+}
+
+/**
  * PlanStore without action
  */
 export type PlanStoreDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1258,4 +2365,8 @@ export type PlanStoreDefaultArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the PlanStore
    */
   omit?: Prisma.PlanStoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStoreInclude<ExtArgs> | null
 }

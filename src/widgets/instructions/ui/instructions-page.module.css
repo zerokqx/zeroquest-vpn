@@ -1,0 +1,81 @@
+.page {
+  padding: 32px 0 96px;
+}
+
+.hero,
+.section,
+.platformCard,
+.stepCard {
+  border: 1px solid var(--surface-border);
+  border-radius: 32px;
+  background: var(--surface);
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.heroTitle,
+.sectionTitle,
+.platformTitle {
+  color: var(--foreground-strong);
+}
+
+.heroTitle {
+  max-width: 14ch;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 0.94;
+  letter-spacing: -0.07em;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.platformTitle {
+  font-size: 1.4rem;
+}
+
+.clientPill {
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--background-subtle);
+  color: var(--foreground-strong);
+  font-weight: 600;
+}
+
+.emptySlot {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.stepNumber {
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 48em) {
+  .page {
+    padding-top: 20px;
+    padding-bottom: 64px;
+  }
+
+  .hero,
+  .section,
+  .platformCard,
+  .stepCard {
+    border-radius: 24px;
+  }
+
+  .heroTitle {
+    max-width: none;
+    font-size: clamp(2rem, 12vw, 3.2rem);
+  }
+}

@@ -386,8 +386,12 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   UserStore: 'UserStore',
   PlanStore: 'PlanStore',
+  InboundStore: 'InboundStore',
+  PlanInboundStore: 'PlanInboundStore',
   PromoCodeStore: 'PromoCodeStore',
-  AccessRecordStore: 'AccessRecordStore'
+  PaymentStore: 'PaymentStore',
+  VpnKeyStore: 'VpnKeyStore',
+  RefundRequestStore: 'RefundRequestStore'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "userStore" | "planStore" | "promoCodeStore" | "accessRecordStore"
+    modelProps: "userStore" | "planStore" | "inboundStore" | "planInboundStore" | "promoCodeStore" | "paymentStore" | "vpnKeyStore" | "refundRequestStore"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -555,6 +559,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InboundStore: {
+      payload: Prisma.$InboundStorePayload<ExtArgs>
+      fields: Prisma.InboundStoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InboundStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InboundStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        findFirst: {
+          args: Prisma.InboundStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InboundStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        findMany: {
+          args: Prisma.InboundStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>[]
+        }
+        create: {
+          args: Prisma.InboundStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        createMany: {
+          args: Prisma.InboundStoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InboundStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>[]
+        }
+        delete: {
+          args: Prisma.InboundStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        update: {
+          args: Prisma.InboundStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        deleteMany: {
+          args: Prisma.InboundStoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InboundStoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InboundStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>[]
+        }
+        upsert: {
+          args: Prisma.InboundStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InboundStorePayload>
+        }
+        aggregate: {
+          args: Prisma.InboundStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInboundStore>
+        }
+        groupBy: {
+          args: Prisma.InboundStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InboundStoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InboundStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InboundStoreCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlanInboundStore: {
+      payload: Prisma.$PlanInboundStorePayload<ExtArgs>
+      fields: Prisma.PlanInboundStoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlanInboundStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlanInboundStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        findFirst: {
+          args: Prisma.PlanInboundStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlanInboundStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        findMany: {
+          args: Prisma.PlanInboundStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>[]
+        }
+        create: {
+          args: Prisma.PlanInboundStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        createMany: {
+          args: Prisma.PlanInboundStoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlanInboundStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>[]
+        }
+        delete: {
+          args: Prisma.PlanInboundStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        update: {
+          args: Prisma.PlanInboundStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlanInboundStoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlanInboundStoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlanInboundStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlanInboundStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanInboundStorePayload>
+        }
+        aggregate: {
+          args: Prisma.PlanInboundStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlanInboundStore>
+        }
+        groupBy: {
+          args: Prisma.PlanInboundStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanInboundStoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlanInboundStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanInboundStoreCountAggregateOutputType> | number
+        }
+      }
+    }
     PromoCodeStore: {
       payload: Prisma.$PromoCodeStorePayload<ExtArgs>
       fields: Prisma.PromoCodeStoreFieldRefs
@@ -629,77 +781,225 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    AccessRecordStore: {
-      payload: Prisma.$AccessRecordStorePayload<ExtArgs>
-      fields: Prisma.AccessRecordStoreFieldRefs
+    PaymentStore: {
+      payload: Prisma.$PaymentStorePayload<ExtArgs>
+      fields: Prisma.PaymentStoreFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.AccessRecordStoreFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload> | null
+          args: Prisma.PaymentStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.AccessRecordStoreFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         findFirst: {
-          args: Prisma.AccessRecordStoreFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload> | null
+          args: Prisma.PaymentStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.AccessRecordStoreFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         findMany: {
-          args: Prisma.AccessRecordStoreFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>[]
+          args: Prisma.PaymentStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>[]
         }
         create: {
-          args: Prisma.AccessRecordStoreCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         createMany: {
-          args: Prisma.AccessRecordStoreCreateManyArgs<ExtArgs>
+          args: Prisma.PaymentStoreCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.AccessRecordStoreCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>[]
+          args: Prisma.PaymentStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>[]
         }
         delete: {
-          args: Prisma.AccessRecordStoreDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         update: {
-          args: Prisma.AccessRecordStoreUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         deleteMany: {
-          args: Prisma.AccessRecordStoreDeleteManyArgs<ExtArgs>
+          args: Prisma.PaymentStoreDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.AccessRecordStoreUpdateManyArgs<ExtArgs>
+          args: Prisma.PaymentStoreUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.AccessRecordStoreUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>[]
+          args: Prisma.PaymentStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>[]
         }
         upsert: {
-          args: Prisma.AccessRecordStoreUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccessRecordStorePayload>
+          args: Prisma.PaymentStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentStorePayload>
         }
         aggregate: {
-          args: Prisma.AccessRecordStoreAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAccessRecordStore>
+          args: Prisma.PaymentStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentStore>
         }
         groupBy: {
-          args: Prisma.AccessRecordStoreGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AccessRecordStoreGroupByOutputType>[]
+          args: Prisma.PaymentStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentStoreGroupByOutputType>[]
         }
         count: {
-          args: Prisma.AccessRecordStoreCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AccessRecordStoreCountAggregateOutputType> | number
+          args: Prisma.PaymentStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentStoreCountAggregateOutputType> | number
+        }
+      }
+    }
+    VpnKeyStore: {
+      payload: Prisma.$VpnKeyStorePayload<ExtArgs>
+      fields: Prisma.VpnKeyStoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VpnKeyStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VpnKeyStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        findFirst: {
+          args: Prisma.VpnKeyStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VpnKeyStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        findMany: {
+          args: Prisma.VpnKeyStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>[]
+        }
+        create: {
+          args: Prisma.VpnKeyStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        createMany: {
+          args: Prisma.VpnKeyStoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VpnKeyStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>[]
+        }
+        delete: {
+          args: Prisma.VpnKeyStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        update: {
+          args: Prisma.VpnKeyStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        deleteMany: {
+          args: Prisma.VpnKeyStoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VpnKeyStoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VpnKeyStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>[]
+        }
+        upsert: {
+          args: Prisma.VpnKeyStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VpnKeyStorePayload>
+        }
+        aggregate: {
+          args: Prisma.VpnKeyStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVpnKeyStore>
+        }
+        groupBy: {
+          args: Prisma.VpnKeyStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VpnKeyStoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VpnKeyStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VpnKeyStoreCountAggregateOutputType> | number
+        }
+      }
+    }
+    RefundRequestStore: {
+      payload: Prisma.$RefundRequestStorePayload<ExtArgs>
+      fields: Prisma.RefundRequestStoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RefundRequestStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RefundRequestStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        findFirst: {
+          args: Prisma.RefundRequestStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RefundRequestStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        findMany: {
+          args: Prisma.RefundRequestStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>[]
+        }
+        create: {
+          args: Prisma.RefundRequestStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        createMany: {
+          args: Prisma.RefundRequestStoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RefundRequestStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>[]
+        }
+        delete: {
+          args: Prisma.RefundRequestStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        update: {
+          args: Prisma.RefundRequestStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        deleteMany: {
+          args: Prisma.RefundRequestStoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RefundRequestStoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RefundRequestStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>[]
+        }
+        upsert: {
+          args: Prisma.RefundRequestStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefundRequestStorePayload>
+        }
+        aggregate: {
+          args: Prisma.RefundRequestStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRefundRequestStore>
+        }
+        groupBy: {
+          args: Prisma.RefundRequestStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RefundRequestStoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RefundRequestStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RefundRequestStoreCountAggregateOutputType> | number
         }
       }
     }
@@ -757,14 +1057,52 @@ export type UserStoreScalarFieldEnum = (typeof UserStoreScalarFieldEnum)[keyof t
 export const PlanStoreScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  title: 'title',
+  description: 'description',
+  priceRub: 'priceRub',
+  currency: 'currency',
+  features: 'features',
+  trafficLimitBytes: 'trafficLimitBytes',
+  durationDays: 'durationDays',
+  speedLimitMbps: 'speedLimitMbps',
+  allowsCustomTraffic: 'allowsCustomTraffic',
   isActive: 'isActive',
+  isFeatured: 'isFeatured',
+  badge: 'badge',
+  ctaText: 'ctaText',
+  customPricePerGbRub: 'customPricePerGbRub',
+  customTrafficMaxGb: 'customTrafficMaxGb',
+  customTrafficMinGb: 'customTrafficMinGb',
+  highlight: 'highlight',
   sortOrder: 'sortOrder',
-  payload: 'payload',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PlanStoreScalarFieldEnum = (typeof PlanStoreScalarFieldEnum)[keyof typeof PlanStoreScalarFieldEnum]
+
+
+export const InboundStoreScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InboundStoreScalarFieldEnum = (typeof InboundStoreScalarFieldEnum)[keyof typeof InboundStoreScalarFieldEnum]
+
+
+export const PlanInboundStoreScalarFieldEnum = {
+  planId: 'planId',
+  inboundId: 'inboundId',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type PlanInboundStoreScalarFieldEnum = (typeof PlanInboundStoreScalarFieldEnum)[keyof typeof PlanInboundStoreScalarFieldEnum]
 
 
 export const PromoCodeStoreScalarFieldEnum = {
@@ -778,16 +1116,63 @@ export const PromoCodeStoreScalarFieldEnum = {
 export type PromoCodeStoreScalarFieldEnum = (typeof PromoCodeStoreScalarFieldEnum)[keyof typeof PromoCodeStoreScalarFieldEnum]
 
 
-export const AccessRecordStoreScalarFieldEnum = {
+export const PaymentStoreScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   planId: 'planId',
+  provider: 'provider',
+  providerPaymentId: 'providerPaymentId',
+  status: 'status',
+  fulfillmentStatus: 'fulfillmentStatus',
+  amount: 'amount',
+  currency: 'currency',
   payload: 'payload',
+  paidAt: 'paidAt',
+  fulfilledAt: 'fulfilledAt',
+  lastCheckedAt: 'lastCheckedAt',
   createdAt: 'createdAt',
-  expiresAt: 'expiresAt'
+  updatedAt: 'updatedAt'
 } as const
 
-export type AccessRecordStoreScalarFieldEnum = (typeof AccessRecordStoreScalarFieldEnum)[keyof typeof AccessRecordStoreScalarFieldEnum]
+export type PaymentStoreScalarFieldEnum = (typeof PaymentStoreScalarFieldEnum)[keyof typeof PaymentStoreScalarFieldEnum]
+
+
+export const VpnKeyStoreScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  paymentId: 'paymentId',
+  inboundId: 'inboundId',
+  keyValue: 'keyValue',
+  trafficLimitBytes: 'trafficLimitBytes',
+  payload: 'payload',
+  expiresAt: 'expiresAt',
+  issuedAt: 'issuedAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type VpnKeyStoreScalarFieldEnum = (typeof VpnKeyStoreScalarFieldEnum)[keyof typeof VpnKeyStoreScalarFieldEnum]
+
+
+export const RefundRequestStoreScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  paymentId: 'paymentId',
+  vpnKeyId: 'vpnKeyId',
+  reviewedByUserId: 'reviewedByUserId',
+  provider: 'provider',
+  providerRefundId: 'providerRefundId',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  payload: 'payload',
+  requestedAt: 'requestedAt',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefundRequestStoreScalarFieldEnum = (typeof RefundRequestStoreScalarFieldEnum)[keyof typeof RefundRequestStoreScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -804,6 +1189,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -841,13 +1234,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -858,6 +1244,27 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -971,8 +1378,12 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   userStore?: Prisma.UserStoreOmit
   planStore?: Prisma.PlanStoreOmit
+  inboundStore?: Prisma.InboundStoreOmit
+  planInboundStore?: Prisma.PlanInboundStoreOmit
   promoCodeStore?: Prisma.PromoCodeStoreOmit
-  accessRecordStore?: Prisma.AccessRecordStoreOmit
+  paymentStore?: Prisma.PaymentStoreOmit
+  vpnKeyStore?: Prisma.VpnKeyStoreOmit
+  refundRequestStore?: Prisma.RefundRequestStoreOmit
 }
 
 /* Types for Logging */

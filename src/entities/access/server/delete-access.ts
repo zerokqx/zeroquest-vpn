@@ -1,7 +1,8 @@
 import { deleteThreeXUiClient } from '@/shared/api/three-x-ui/server';
 import {
-  deleteAccessRecordByIdForUser,
   getAccessRecordByIdForUser,
+  getVpnKeyByPaymentId,
+  revokeVpnKeyByIdForUser,
 } from './repository';
 
 export const deleteAccessForUser = async (
@@ -18,5 +19,20 @@ export const deleteAccessForUser = async (
     accessRecord.inboundId,
     accessRecord.threeXUiClientId
   );
-  await deleteAccessRecordByIdForUser(accessId, userId);
+  await revokeVpnKeyByIdForUser(accessId, userId);
+};
+
+export const revokeAccessForRefundByPaymentId = async (
+  paymentId: string
+): Promise<void> => {
+  const vpnKey = await getVpnKeyByPaymentId(paymentId);
+
+  if (!vpnKey) {
+    throw new Error('Подключение не найдено');
+  }
+
+  if (vpnKey.revokedAt === null) {
+    await deleteThreeXUiClient(vpnKey.inboundId, vpnKey.threeXUiClientId);
+    await revokeVpnKeyByIdForUser(vpnKey.id, vpnKey.userId);
+  }
 };

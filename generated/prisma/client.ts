@@ -52,12 +52,32 @@ export type UserStore = Prisma.UserStoreModel
  */
 export type PlanStore = Prisma.PlanStoreModel
 /**
+ * Model InboundStore
+ * 
+ */
+export type InboundStore = Prisma.InboundStoreModel
+/**
+ * Model PlanInboundStore
+ * 
+ */
+export type PlanInboundStore = Prisma.PlanInboundStoreModel
+/**
  * Model PromoCodeStore
  * 
  */
 export type PromoCodeStore = Prisma.PromoCodeStoreModel
 /**
- * Model AccessRecordStore
+ * Model PaymentStore
  * 
  */
-export type AccessRecordStore = Prisma.AccessRecordStoreModel
+export type PaymentStore = Prisma.PaymentStoreModel
+/**
+ * Model VpnKeyStore
+ * 
+ */
+export type VpnKeyStore = Prisma.VpnKeyStoreModel
+/**
+ * Model RefundRequestStore
+ * 
+ */
+export type RefundRequestStore = Prisma.RefundRequestStoreModel

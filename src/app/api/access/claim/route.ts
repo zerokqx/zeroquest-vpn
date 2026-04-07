@@ -1,58 +1,19 @@
-import { requireCurrentUser } from '@/entities/user';
-import { claimPlan } from '@/features/claim-plan';
-import { claimPlanRequestSchema } from '@/features/claim-plan/model/schemas';
+import { withRouteLogging } from '@/shared/logging/server/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function POST(request: Request): Promise<Response> {
-  try {
-    const user = await requireCurrentUser();
-    const body = (await request.json()) as {
-      customTrafficGb?: number;
-      planId?: string;
-      deviceName?: string;
-      name?: string;
-      promoCode?: string;
-    };
-    const parsed = claimPlanRequestSchema.safeParse({
-      customTrafficGb: body.customTrafficGb,
-      deviceName: body.deviceName ?? body.name,
-      planId: body.planId,
-      promoCode: body.promoCode,
-    });
-
-    if (!parsed.success) {
-      return Response.json(
-        {
-          error: parsed.error.issues[0]?.message || 'Некорректные данные',
-        },
-        { status: 400 }
-      );
-    }
-
-    const result = await claimPlan({
-      ...parsed.data,
-      user,
-    });
-
-    return Response.json(result);
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      return Response.json(
-        {
-          error: 'Войдите в аккаунт, чтобы получить доступ',
-        },
-        { status: 401 }
-      );
-    }
+export const POST = withRouteLogging(
+  'api.access.claim.post',
+  async (request: Request): Promise<Response> => {
+    void request;
 
     return Response.json(
       {
         error:
-          error instanceof Error ? error.message : 'Unable to create access',
+          'Прямая выдача доступа отключена. Сначала создайте платеж через /api/payments.',
       },
-      { status: 400 }
+      { status: 410 }
     );
   }
-}
+);

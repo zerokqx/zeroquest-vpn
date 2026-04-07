@@ -4,3 +4,11 @@
   border-radius: 20px;
   background: var(--background-subtle);
 }
+
+.burgerButton {
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 2;
+}
